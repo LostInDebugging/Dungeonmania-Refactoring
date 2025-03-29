@@ -4,23 +4,80 @@
 
 > What is the difference in purpose between the `DungeonManiaController` and the `Game` classes? (1 mark)
 
-[Answer]
+    DungeonManiaController
+    It acts like a public-Interace for the game serving as a bridge between the frontend and backend logic.
+    Also works to receive input from the player and convert it into backend logic calls.
+    Exposes the following methods
+        newGame()
+        tick()
+        interact()
+        build()
+    
+    Game
+    It is the core 'engine' of the game. It holds and handles all game states including
+    Dugeon Map and entities
+    Player and enemies
+    Battle and Interactions
+    Tick handling and logic 
+
 
 > In the game, player and enemy actions to be performed later are stored as "comparable callbacks". Callbacks are pieces of code that can be run at a later time. However, for what purpose are these callbacks made *comparable*? (1 mark)
 
-[Answer]
+    ComparableCallback class wraps a Runnable and assigns it a priority v. These callbacks are made comparable so they be ordered by priority in a PriorityQueue. - (if actions like potion effects need to execute before others in a tick)
+    Basically so that the game can prioritise which actions to run first each tick so that the game run correctly
 
 > Why is it so important that the dungeon files used for testing follow the technical specification? (4.1.1 in the MVP spec) (1 mark) 
-
-[Answer]
+ 
+    The game relies on reading the files in JSON format and they define  entities, types and the layout
+    If they dont follow the technical specification in 4.1.1 it could lead to:
+        Failing tests even if logic is correct
+        Runtime errors - missing fields 
+        Invalid game states - no player loaded
+    It would ensure that the test inputs are valid and compatible with the game expections
 
 > The Game class includes a method with the signature public Game tick(Direction movementDirection). Provide a detailed explanation of what this method does, including an overview of all the other methods it calls. Additionally, explain the purpose of the callback system it interacts with, and clarify the intentions behind the tickActions, futureTickActions, and currentAction fields. (1 mark)
 
-[Answer]
+    It triggers the main gamae loop for a single tick.
+    The public Game tick(Direction movementDirection) is split into:
+
+    The tick(Direction) method which registers the player movement as a callback
+    "registerOnce(() -> player.move(this.getMap(), movementDirection), PLAYER_MOVEMENT, "playerMoves");"
+
+    Then calls a tick() which runs game logic based on the priority 
+    which processes all tickActions and handles futureTickActions which aare scheduled callbacks for next ticks
+    updates tick counter
+
+    tickActions - Priority Queue of actions scheduled for the current tick
+    futureTickActions - Actions scheduled to occur in the future ticks
+    currentAction - The callback being executed now
+
 
 > A player with 10 health and 1 attack, holding a sword which gives a +1 attack bonus, battles a spider with 4 health and 1 attack. How many rounds of battle occur? How many ticks does the battle take? Explain how you came to this conclusion, referring to lines of code. How do the answers to these questions change if the player has additionally drunk an invisibility potion? (1 mark)
 
-[Answer]
+    In battleStatistics  the while loop 53-60
+        while (self.getHealth() > 0 && target.getHealth() > 0)
+            self.setHealth(self.getHealth() - damageOnSelf);
+            target.setHealth(target.getHealth() - damageOnTarget);
+            rounds.add(new BattleRound(-damageOnSelf, -damageOnTarget));
+    Each iteration creats a anew round so:
+        Round 1:
+            Player deals 2 damage → Spider: 4 → 2 HP
+            Spider deals 1 damage → Player: 10 → 9 HP
+        Round 2
+            Player deals 2 damage → Spider: 2 → 0 HP
+            Spider deals 1 damage → Player: 9 → 8 HP
+
+    It all works in the same tick. So 2 rounds 1 tick
+
+
+    For invisibility, under player.java 
+        public BattleStatistics applyBuff(BattleStatistics origin)
+        else if (state.isInvisible())
+        return BattleStatistics.applyBuff(origin, new BattleStatistics(0, 0, 0, 1, 1, false, false  (<----isBattleEnabled)));
+    which disabled battle from Battle statistics isBattleEnabled is set to false
+
+    So 0 rounds 0 ticks.
+
 
 ## Task 1) Code Analysis and Refactoring ⛏️
 
