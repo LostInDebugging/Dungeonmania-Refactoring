@@ -71,8 +71,11 @@
     player is 10, as per the spec. Obviously the actual values depend on the specific
     construction of BattleStatistics, but for now we assume that the code follows
     the spec, in which case the following lines are responsible for the damage values
-    `double damageOnSelf = target.getMagnifier() * (target.getAttack() - self.getDefence()) / self.getReducer();`
-    `double damageOnTarget = self.getMagnifier() * (self.getAttack() - target.getDefence()) / target.getReducer();` 
+```
+    double damageOnSelf = target.getMagnifier() * (target.getAttack() - self.getDefence()) / self.getReducer();
+    double damageOnTarget = self.getMagnifier() * (self.getAttack() - target.getDefence()) / target.getReducer();`
+```
+
 
     The actual number of rounds are as follows, with the enemy being spider in this case:
 
