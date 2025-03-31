@@ -4,23 +4,98 @@
 
 > What is the difference in purpose between the `DungeonManiaController` and the `Game` classes? (1 mark)
 
-[Answer]
+    DungeonManiaController
+    It acts like a public-Interface for the game serving as a bridge between the frontend and backend logic.
+    Also works to receive input from the player and convert it into backend logic calls.
+    Exposes the following methods
+        newGame()
+        tick()
+        interact()
+        build()
+    
+    Game
+    It is the core 'engine' of the game. It holds and handles all game data and states including
+    Dugeon Map and entities
+    Player and enemies
+    Battle and Interactions
+    Tick handling and logic 
+
+    In summary, the DungeonManiaController is an API for the game, in that it allows
+    an external system to query information about the game state and forward user input
+    (i.e. in a UI system). As opposed to this, the Game class handles the logic and 
+    the changing game states of the game.
+
 
 > In the game, player and enemy actions to be performed later are stored as "comparable callbacks". Callbacks are pieces of code that can be run at a later time. However, for what purpose are these callbacks made *comparable*? (1 mark)
 
-[Answer]
+    ComparableCallback class wraps a Runnable and assigns it a priority v. These callbacks are made comparable so they be ordered by priority in a PriorityQueue. - (if actions like potion effects need to execute before others in a tick)
+    Basically so that the game can prioritise which actions to run first each tick so that the game can run correctly
 
 > Why is it so important that the dungeon files used for testing follow the technical specification? (4.1.1 in the MVP spec) (1 mark) 
-
-[Answer]
+ 
+    The game relies on reading the files in JSON format and they define entities, types and the layout
+    If they don't follow the technical specification in 4.1.1 it could lead to:
+        Failing tests even if logic is correct
+        Runtime errors - missing fields 
+        Invalid game states - no player loaded
+    It would ensure that the test inputs are valid and compatible with the game expectations
 
 > The Game class includes a method with the signature public Game tick(Direction movementDirection). Provide a detailed explanation of what this method does, including an overview of all the other methods it calls. Additionally, explain the purpose of the callback system it interacts with, and clarify the intentions behind the tickActions, futureTickActions, and currentAction fields. (1 mark)
 
-[Answer]
+    It triggers the main game loop for a single tick (a transition from one state to another state, as defined in the spec).
+
+    The public method with signature Game tick(Direction movementDirection) is split into:
+
+        - The registerOnce() method which registers the player movement as a callback
+        "registerOnce(() -> player.move(this.getMap(), movementDirection), PLAYER_MOVEMENT, "playerMoves");"
+
+        - Then calls a tick() which runs game logic based on the priority 
+        which processes all tickActions and handles futureTickActions which are scheduled callbacks for next ticks
+        updates tick counter
+
+    tickActions - Priority Queue of actions scheduled for the current tick
+    futureTickActions - Actions scheduled to occur in the future ticks
+    currentAction - The callback being executed now
+
 
 > A player with 10 health and 1 attack, holding a sword which gives a +1 attack bonus, battles a spider with 4 health and 1 attack. How many rounds of battle occur? How many ticks does the battle take? Explain how you came to this conclusion, referring to lines of code. How do the answers to these questions change if the player has additionally drunk an invisibility potion? (1 mark)
 
-[Answer]
+    In battleStatistics the while loop 53-60
+        while (self.getHealth() > 0 && target.getHealth() > 0)
+            self.setHealth(self.getHealth() - damageOnSelf);
+            target.setHealth(target.getHealth() - damageOnTarget);
+            rounds.add(new BattleRound(-damageOnSelf, -damageOnTarget));
+    Each iteration creates a new round so:
+
+    We assume that the reducer for the spider is 5 while the reducer for the
+    player is 10, as per the spec. Obviously the actual values depend on the specific
+    construction of BattleStatistics, but for now we assume that the code follows
+    the spec, in which case the following lines are responsible for the damage values
+
+    double damageOnSelf = target.getMagnifier() * (target.getAttack() - self.getDefence()) / self.getReducer();
+    double damageOnTarget = self.getMagnifier() * (self.getAttack() - target.getDefence()) / target.getReducer();
+
+    The actual number of rounds are as follows, with the enemy being spider in this case:
+
+    Battle occurs:
+    - Round 1   enemy health    = 4 - ((1 + 1) / 5)  = 3.6
+                player health   = 10 - (1 / 10)       = 9.9
+    - Round 2   enemy health    = 3.6 - ((1 + 1) / 5)  = 3.2
+                player health   = 9.9 - (1 / 10)       = 9.8
+    ...
+    - Round 10   enemy health    = 0.4 - ((1 + 1) / 5)  = 0
+                player health   = 9.1 - (1 / 10)       = 9
+
+    It all works in the same tick. So 10 rounds 1 tick.
+
+    For invisibility, under player.java 
+        public BattleStatistics applyBuff(BattleStatistics origin)
+        else if (state.isInvisible())
+        return BattleStatistics.applyBuff(origin, new BattleStatistics(0, 0, 0, 1, 1, false, false  (<----isBattleEnabled)));
+    which disabled battle from Battle statistics isBattleEnabled is set to false
+
+    So 0 rounds 0 ticks.
+
 
 ## Task 1) Code Analysis and Refactoring ⛏️
 
