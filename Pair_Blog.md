@@ -105,15 +105,24 @@
 
 > i. Look inside src/main/java/dungeonmania/entities/enemies. Where can you notice an instance of repeated code? Note down the particular offending lines/methods/fields.
 
-[Answer]
+- The repeated code is inside the methods with signature "public void move(Game game)" inside ZombieToast.java and Mercenary.java.
+- The "random" and "runAway" case statements repeat the code that involves determining how the particular enemy type will move.
 
 > ii. What Design Pattern could be used to improve the quality of the code and avoid repetition? Justify your choice by relating the scenario to the key characteristics of your chosen Design Pattern.
 
-[Answer]
+- This is a great opportunity to implement the Strategy pattern by introducing movementStrategy into the Enemy class.
+- By implementing a RandomStrategy and a RunawayStrategy and using composition under a common super-interface called movementStrategy, we will not have to repeat this code inside both Mercenary and ZombieToast.java.
+- We can also add the spider's movement strategy to it so even the spider class can delegate movement logic to another class. This way we can allow the movementStrategy field to be a field of the superclass Enemy rather than only having it in some of its subclass enemy types.
+- The movement behaviour is a specific type of behaviour in which the enemy is trying to get from one tile to another tile. Since there a lot of different ways for the enemy to get from one tile to another (movement strategies), it makes sense to use the strategy pattern since that's what it excels at; accomplishing something specific in a lot of different ways.
+- Using the strategy pattern in this scenario also decouples the specific movement behaviour into a different class, which means that the code follows the open-closed principle more closely as when we need to add a different type of strategy, we do not have any specific enemy subclass, but rather we can simply create another class that implements the movementStrategy interface and implement our strategy in that.
 
 > iii. Using your chosen Design Pattern, refactor the code to remove the repetition.
 
-[Briefly explain what you did]
+- I created a MovementStrategy interface that has the method signature of the move function that previously existed in all the enemy type subclasses. 
+- I added a field to the Enemy class called MovementStrategy because every enemy has a movement strategy. 
+- The field would get initialised in Enemy from its specific enemy subclasses super calls.
+- This way I can simply call enemy.move() and remove the move method from all the enemy subclasses.
+- Places where strings were used to change the movement strategy type have been updated accordingly.
 
 ### b) Pattern Analysis
 
