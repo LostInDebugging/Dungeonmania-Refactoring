@@ -188,7 +188,6 @@
     Now, instead of Switch calculating the area of effect and performing destruction directly, it delegates that responsibility to each bomb via b.activate(map). This places behavior where it logically belongs in the Bomb class. 
     The result is cleaner, modular, and easier-to-maintain.
 
-
 ### e) Open-Closed Goals
 
 [Links to your merge requests](/put/links/here)
