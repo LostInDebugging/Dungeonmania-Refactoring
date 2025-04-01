@@ -158,6 +158,7 @@
     I moved the bomb activation logic into a new method activate(GameMap map) inside the Bomb class. 
     Now, instead of Switch calculating the area of effect and performing destruction directly, it delegates that responsibility to each bomb via b.activate(map). This places behavior where it logically belongs in the Bomb class. 
     The result is cleaner, modular, and easier-to-maintain.
+    
 
 ### e) Open-Closed Goals
 
