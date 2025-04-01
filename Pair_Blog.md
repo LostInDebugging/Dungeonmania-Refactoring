@@ -130,13 +130,33 @@
 
 > i. Identify one place where the State Pattern is present in the codebase. Do you think this is an appropriate use of the State Pattern?
 
-[Answer]
+    Yes it is appropriate, the State Pattern is used in the playerState package, where the Player entity manages different states such as BaseState, InvincibleState, and InvisibleState.This approach is an effective use of the State Pattern.
 
 > ii. (Option 1) If you answered that it was an appropriate use of the State Pattern, explain why. In your answer, explain how the implementation relates to the purpose and the key characteristics of the State Pattern. Include relevant snippets of code to support your answer.
 
-> (Option 2) If you answered that it was not an appropriate use of the State Pattern, refactor the code to improve the implementation. You may choose to improve the usage of the pattern, switch to a different design pattern, or remove the pattern entirely.
+    The State Pattern is used to manage the different potion effects on the player such as invincibility or invisibility. The Player class delegates potion-related behavior to the current PlayerState Object, rather than using large conditional blocks.
+    
+    From Player.java
+    public void changeState(PlayerState playerState) {
+        state = playerState;
+    }
 
-[Answer or brief explanation of your code]
+    Each state class controls how the player transitions between states. For example
+    from InvisibleState.java
+
+    public void transitionInvisible() {
+        Player player = getPlayer();
+        player.changeState(new InvisibleState(player));
+    }
+
+    It encapsulates state-specific logic such as how enemies react to the player.
+    It allows dynamic transitions between states during gameplay.
+    It keeps the Player class free of repetitive conditional statements.
+    It promotes Single Responsibility — each class does one thing well.
+    it prevents duplication of logic across states.
+    It makes it easier to add new states without changing existing logic.
+
+    The pattern used improves the code quality and maintainability.
 
 ### c) Inheritance Design
 
