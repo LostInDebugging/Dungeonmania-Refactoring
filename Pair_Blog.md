@@ -164,7 +164,9 @@
 
 > i. List one design principle that is violated by collectable objects based on the description above. Briefly justify your answer.
 
-[Answer]
+- The Liskov Substitution Principle (LSP) is violated. 
+- It states that objects of a superclass type are replaceable by any of their child classes without affecting functionality.
+- However, since items like wood and treasure don't have attributes like durability, this means that there will be functionality in the superclass type (collectable) which will not work or be used for the child class (Wood/Treasure).
 
 > ii. Refactor the inheritance structure of the code, and in the process remove the design principle violation you identified.
 
