@@ -105,24 +105,24 @@
 
 > i. Look inside src/main/java/dungeonmania/entities/enemies. Where can you notice an instance of repeated code? Note down the particular offending lines/methods/fields.
 
-- The repeated code is inside the methods with signature "public void move(Game game)" inside ZombieToast.java and Mercenary.java.
-- The "random" and "runAway" case statements repeat the code that involves determining how the particular enemy type will move.
+    - The repeated code is inside the methods with signature "public void move(Game game)" inside ZombieToast.java and Mercenary.java.
+    - The "random" and "runAway" case statements repeat the code that involves determining how the particular enemy type will move.
 
 > ii. What Design Pattern could be used to improve the quality of the code and avoid repetition? Justify your choice by relating the scenario to the key characteristics of your chosen Design Pattern.
 
-- This is a great opportunity to implement the Strategy pattern by introducing movementStrategy into the Enemy class.
-- By implementing a RandomStrategy and a RunawayStrategy and using composition under a common super-interface called movementStrategy, we will not have to repeat this code inside both Mercenary and ZombieToast.java.
-- We can also add the spider's movement strategy to it so even the spider class can delegate movement logic to another class. This way we can allow the movementStrategy field to be a field of the superclass Enemy rather than only having it in some of its subclass enemy types.
-- The movement behaviour is a specific type of behaviour in which the enemy is trying to get from one tile to another tile. Since there a lot of different ways for the enemy to get from one tile to another (movement strategies), it makes sense to use the strategy pattern since that's what it excels at; accomplishing something specific in a lot of different ways.
-- Using the strategy pattern in this scenario also decouples the specific movement behaviour into a different class, which means that the code follows the open-closed principle more closely as when we need to add a different type of strategy, we do not have any specific enemy subclass, but rather we can simply create another class that implements the movementStrategy interface and implement our strategy in that.
+    - This is a great opportunity to implement the Strategy pattern by introducing movementStrategy into the Enemy class.
+    - By implementing a RandomStrategy and a RunawayStrategy and using composition under a common super-interface called movementStrategy, we will not have to repeat this code inside both Mercenary and ZombieToast.java.
+    - We can also add the spider's movement strategy to it so even the spider class can delegate movement logic to another class. This way we can allow the movementStrategy field to be a field of the superclass Enemy rather than only having it in some of its subclass enemy types.
+    - The movement behaviour is a specific type of behaviour in which the enemy is trying to get from one tile to another tile. Since there a lot of different ways for the enemy to get from one tile to another (movement strategies), it makes sense to use the strategy pattern since that's what it excels at; accomplishing something specific in a lot of different ways.
+    - Using the strategy pattern in this scenario also decouples the specific movement behaviour into a different class, which means that the code follows the open-closed principle more closely as when we need to add a different type of strategy, we do not have any specific enemy subclass, but rather we can simply create another class that implements the movementStrategy interface and implement our strategy in that.
 
 > iii. Using your chosen Design Pattern, refactor the code to remove the repetition.
 
-- I created a MovementStrategy interface that has the method signature of the move function that previously existed in all the enemy type subclasses. 
-- I added a field to the Enemy class called MovementStrategy because every enemy has a movement strategy. 
-- The field would get initialised in Enemy from its specific enemy subclasses super calls.
-- This way I can simply call enemy.move() and remove the move method from all the enemy subclasses.
-- Places where strings were used to change the movement strategy type have been updated accordingly.
+    - I created a MovementStrategy interface that has the method signature of the move function that previously existed in all the enemy type subclasses. 
+    - I added a field to the Enemy class called MovementStrategy because every enemy has a movement strategy. 
+    - The field would get initialised in Enemy from its specific enemy subclasses super calls.
+    - This way I can simply call enemy.move() and remove the move method from all the enemy subclasses.
+    - Places where strings were used to change the movement strategy type have been updated accordingly.
 
 ### b) Pattern Analysis
 
@@ -164,16 +164,16 @@
 
 > i. List one design principle that is violated by collectable objects based on the description above. Briefly justify your answer.
 
-- The Liskov Substitution Principle (LSP) is violated. 
-- It states that objects of a superclass type are replaceable by any of their child classes without affecting functionality.
-- However, since items like wood and treasure don't have attributes like durability, this means that there will be functionality in the superclass type (collectable) which will not work or be used for the child class (Wood/Treasure).
+    - The Liskov Substitution Principle (LSP) is violated. 
+    - It states that objects of a superclass type are replaceable by any of their child classes without affecting functionality.
+    - However, since items like wood and treasure don't have attributes like durability, this means that there will be functionality in the superclass type (collectable) which will not work or be used for the child class (Wood/Treasure).
 
 > ii. Refactor the inheritance structure of the code, and in the process remove the design principle violation you identified.
 
-- Added a getDurability() method to the Usable interface
-- Created interfaces for Buffable and Buildable rather than having it is a class, considering
-buildable didn't actually have unique attributes that would be common to its subclasses.
-- Removed applyBuff and getDurability abstract methods from InventoryItem.
+    - Added a getDurability() method to the Usable interface
+    - Created interfaces for Buffable and Buildable rather than having it is a class, considering
+    buildable didn't actually have unique attributes that would be common to its subclasses.
+    - Removed applyBuff and getDurability abstract methods from InventoryItem.
 
 
 ### d) More Code Smells
@@ -200,20 +200,20 @@ buildable didn't actually have unique attributes that would be common to its sub
 
 > i. Do you think the design is of good quality here? Do you think it complies with the open-closed principle? Do you think the design should be changed?
 
-- The design is not of good quality here. 
-- This is because it does not apply with the open-closed principle. In the future, if a decision to add a new type of goal is made, then we have to open the whole Goal.java file and make modifications to the massive if statement. 
-- We would also have to make modifications to the if statement in GoalFactory.java when we are trying to read the goalType from .json files.
-- Ideally, goals should all have their own classes, so when a new type of goal is added, it is easy to extend the code without making many modifications to the existing code, if any at all.
-- This is why the design should be changed.
+    - The design is not of good quality here. 
+    - This is because it does not apply with the open-closed principle. In the future, if a decision to add a new type of goal is made, then we have to open the whole Goal.java file and make modifications to the massive if statement. 
+    - We would also have to make modifications to the if statement in GoalFactory.java when we are trying to read the goalType from .json files.
+    - Ideally, goals should all have their own classes, so when a new type of goal is added, it is easy to extend the code without making many modifications to the existing code, if any at all.
+    - This is why the design should be changed.
 
 > ii. If you think the design is sufficient as it is, justify your decision. If you think the answer is no, pick a suitable Design Pattern that would improve the quality of the code and refactor the code accordingly.
 
-- The composite pattern is best suited for this code. Considering that a compound goal can have more compound goals as its subgoals, this means we can model this behaviour using a tree structure.
-- By representing goals in a tree-like structure, we can use recursion and hence the composite pattern is best suited for this problem.
+    - The composite pattern is best suited for this code. Considering that a compound goal can have more compound goals as its subgoals, this means we can model this behaviour using a tree structure.
+    - By representing goals in a tree-like structure, we can use recursion and hence the composite pattern is best suited for this problem.
 
-- Changes made:
-    - Modified goal to be an interface with child subclasses BasicGoal and CompoundGoal. BasicGoals are singular goals like exitGoals, whereas CompoundGoal has 2 goals as fields.
-    - Added relevant methods and changed GoalFactory.java to work with refactored code.
+    - Changes made:
+        - Modified goal to be an interface with child subclasses BasicGoal and CompoundGoal. BasicGoals are singular goals like exitGoals, whereas CompoundGoal has 2 goals as fields.
+        - Added relevant methods and changed GoalFactory.java to work with refactored code.
 
 ### f) Open Refactoring
 
