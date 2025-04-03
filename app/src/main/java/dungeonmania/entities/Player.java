@@ -202,4 +202,12 @@ public class Player extends Entity implements Battleable {
                 .map(entity -> new ItemResponse(entity.getId(), NameConverter.toSnakeCase(entity)))
                 .collect(Collectors.toList());
     }
+
+    public double getHealth() {
+        return getBattleStatistics().getHealth();
+    }
+
+    public <T extends InventoryItem> List<T> getInventoryItems(Class<T> itemType) {
+        return getInventory().getEntities(itemType);
+    }
 }

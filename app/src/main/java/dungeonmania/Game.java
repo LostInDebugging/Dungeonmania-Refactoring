@@ -227,4 +227,8 @@ public class Game {
             return null;
         return player.getInventoryResponses();
     }
+
+    public <T extends Entity> List<T> getEntitiesOfType(Class<T> type) {
+        return map.getEntities(type);
+    }
 }
