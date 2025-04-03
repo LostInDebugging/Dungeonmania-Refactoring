@@ -219,7 +219,8 @@ buildable didn't actually have unique attributes that would be common to its sub
 
 [Merge Request 1](/put/links/here)
 
-[Briefly explain what you did]
+    I created a StaticEntity class that provides default implementation for methods like onOverlap, onMovedAway and onDestroy removing repeated empty methods for classes such such Exit, Wall, Door, Boulder, Switch, and InventoryItem which now extend StaticEntity.
+    It improves the inheritance structure and enforcing cleaner design.
 
 [Merge Request 2](/put/links/here)
 
