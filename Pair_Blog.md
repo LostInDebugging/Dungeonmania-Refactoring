@@ -225,6 +225,14 @@ buildable didn't actually have unique attributes that would be common to its sub
 
 [Briefly explain what you did]
 
+[Merge Request 3](/put/links/here)
+
+    All minor changes for LoD before a large change in GameMap.
+    Made LoD improvments in ResponseBuilder with helper methods in Player, Game
+    This was a better approach that prevents it from "knowing" the internal structure 
+    Improved Encapsulation of BattleFacade by introducing helper methods instead of directly accessing player or enemy internals.
+    Minor LoD improvement is Enemies same as above - Introducing helpers
+
 Add all other changes you made in the same format here:
 
 ## Task 2) Evolution of Requirements 👽
