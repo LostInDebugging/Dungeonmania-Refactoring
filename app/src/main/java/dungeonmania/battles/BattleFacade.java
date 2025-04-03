@@ -7,8 +7,7 @@ import java.util.stream.Collectors;
 import dungeonmania.Game;
 import dungeonmania.entities.Entity;
 import dungeonmania.entities.Player;
-import dungeonmania.entities.buildables.*;
-import dungeonmania.entities.collectables.Sword;
+import dungeonmania.entities.collectables.Buffable;
 import dungeonmania.entities.collectables.Useable;
 import dungeonmania.entities.collectables.potions.Potion;
 import dungeonmania.entities.enemies.Enemy;
@@ -36,8 +35,8 @@ public class BattleFacade {
             playerBuff = player.applyBuff(playerBuff);
         } else {
             for (InventoryItem item : player.getInventory().getEntities(InventoryItem.class)) {
-                if (item instanceof Bow || item instanceof Shield || item instanceof Sword) {
-                    playerBuff = item.applyBuff(playerBuff);
+                if (item instanceof Buffable) {
+                    playerBuff = ((Buffable) item).applyBuff(playerBuff);
                     battleItems.add(item);
                     ((Useable) item).use(game);
                 }
