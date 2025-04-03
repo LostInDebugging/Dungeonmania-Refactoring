@@ -200,11 +200,20 @@ buildable didn't actually have unique attributes that would be common to its sub
 
 > i. Do you think the design is of good quality here? Do you think it complies with the open-closed principle? Do you think the design should be changed?
 
-[Answer]
+- The design is not of good quality here. 
+- This is because it does not apply with the open-closed principle. In the future, if a decision to add a new type of goal is made, then we have to open the whole Goal.java file and make modifications to the massive if statement. 
+- We would also have to make modifications to the if statement in GoalFactory.java when we are trying to read the goalType from .json files.
+- Ideally, goals should all have their own classes, so when a new type of goal is added, it is easy to extend the code without making many modifications to the existing code, if any at all.
+- This is why the design should be changed.
 
 > ii. If you think the design is sufficient as it is, justify your decision. If you think the answer is no, pick a suitable Design Pattern that would improve the quality of the code and refactor the code accordingly.
 
-[Briefly explain what you did]
+- The composite pattern is best suited for this code. Considering that a compound goal can have more compound goals as its subgoals, this means we can model this behaviour using a tree structure.
+- By representing goals in a tree-like structure, we can use recursion and hence the composite pattern is best suited for this problem.
+
+- Changes made:
+    - Modified goal to be an interface with child subclasses BasicGoal and CompoundGoal. BasicGoals are singular goals like exitGoals, whereas CompoundGoal has 2 goals as fields.
+    - Added relevant methods and changed GoalFactory.java to work with refactored code.
 
 ### f) Open Refactoring
 
