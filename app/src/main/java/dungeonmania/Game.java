@@ -1,5 +1,6 @@
 package dungeonmania;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.UUID;
@@ -12,9 +13,11 @@ import dungeonmania.entities.Player;
 import dungeonmania.entities.collectables.Bomb;
 import dungeonmania.entities.collectables.potions.Potion;
 import dungeonmania.entities.enemies.Enemy;
+import dungeonmania.entities.inventory.Inventory;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.goals.GoalTypes.Goal;
 import dungeonmania.map.GameMap;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 
 public class Game {
@@ -205,5 +208,23 @@ public class Game {
 
     public BattleFacade getBattleFacade() {
         return battleFacade;
+    }
+
+    public List<Entity> getAllEntities() {
+        return this.map.getEntities();
+    }
+
+    public Inventory getPlayerInventory() {
+        return this.player.getInventory();
+    }
+
+    public List<String> getAvailableBuildables() {
+        return (this.player != null) ? this.player.getBuildables() : new ArrayList<>();
+    }
+
+    public List<ItemResponse> getPlayerInventoryResponses() {
+        if (player == null)
+            return null;
+        return player.getInventoryResponses();
     }
 }
