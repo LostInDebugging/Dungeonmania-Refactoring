@@ -176,11 +176,17 @@
 
 > i. What code smell is present in the above snippet?
 
-[Answer]
+    The code in Switch.java shows Feature Envy smell. 
+    The Switch class reaches into each Bomb object to access its position and  its radius, and performs the activation logic itself. 
+    This violates Encapsulation and the Single Responsibility Principle as the logic for what a bomb should do when activated is being handled by a different class.
+
+    This also reduces cohesion in the Switch class and couples it tightly with Bomb.
 
 > ii. Refactor the code to resolve the smell and underlying problem causing it.
 
-[Briefly explain what you did]
+    I moved the bomb activation logic into a new method activate(GameMap map) inside the Bomb class. 
+    Now, instead of Switch calculating the area of effect and performing destruction directly, it delegates that responsibility to each bomb via b.activate(map). This places behavior where it logically belongs in the Bomb class. 
+    The result is cleaner, modular, and easier-to-maintain.
 
 ### e) Open-Closed Goals
 
