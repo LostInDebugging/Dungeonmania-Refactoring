@@ -8,7 +8,7 @@ import dungeonmania.entities.inventory.InventoryItem;
 import dungeonmania.map.GameMap;
 import dungeonmania.util.Position;
 
-public class Sword extends InventoryItem implements Useable {
+public class Sword extends InventoryItem implements Useable, Buffable {
     public static final double DEFAULT_ATTACK = 1;
     public static final double DEFAULT_ATTACK_SCALE_FACTOR = 1;
     public static final int DEFAULT_DURABILITY = 5;

@@ -101,7 +101,7 @@
 
 ### a) From DRY to Design Patterns
 
-[Links to your merge requests](/put/links/here)
+[Links to your merge requests](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/3)
 
 > i. Look inside src/main/java/dungeonmania/entities/enemies. Where can you notice an instance of repeated code? Note down the particular offending lines/methods/fields.
 
@@ -126,7 +126,7 @@
 
 ### b) Pattern Analysis
 
-[Links to your merge requests](/put/links/here)
+[Links to your merge requests](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/4)
 
 > i. Identify one place where the State Pattern is present in the codebase. Do you think this is an appropriate use of the State Pattern?
 
@@ -164,11 +164,17 @@
 
 > i. List one design principle that is violated by collectable objects based on the description above. Briefly justify your answer.
 
-[Answer]
+- The Liskov Substitution Principle (LSP) is violated. 
+- It states that objects of a superclass type are replaceable by any of their child classes without affecting functionality.
+- However, since items like wood and treasure don't have attributes like durability, this means that there will be functionality in the superclass type (collectable) which will not work or be used for the child class (Wood/Treasure).
 
 > ii. Refactor the inheritance structure of the code, and in the process remove the design principle violation you identified.
 
-[Briefly explain what you did]
+- Added a getDurability() method to the Usable interface
+- Created interfaces for Buffable and Buildable rather than having it is a class, considering
+buildable didn't actually have unique attributes that would be common to its subclasses.
+- Removed applyBuff and getDurability abstract methods from InventoryItem.
+
 
 ### d) More Code Smells
 
