@@ -10,7 +10,7 @@ public class RunawayStrategy implements MovementStrategy {
     @Override
     public void move(GameMap map, Enemy enemy, Player player) {
         // Check whether the zombie should flee left or right & up or down
-        Position plrDiff = Position.calculatePositionBetween(map.getPlayer().getPosition(), enemy.getPosition());
+        Position plrDiff = Position.calculatePositionBetween(player.getPosition(), enemy.getPosition());
         Position moveX = (plrDiff.getX() >= 0) ? Position.translateBy(enemy.getPosition(), Direction.RIGHT)
                 : Position.translateBy(enemy.getPosition(), Direction.LEFT);
         Position moveY = (plrDiff.getY() >= 0) ? Position.translateBy(enemy.getPosition(), Direction.DOWN)

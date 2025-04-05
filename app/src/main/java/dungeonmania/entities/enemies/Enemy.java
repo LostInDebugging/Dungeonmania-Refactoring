@@ -1,5 +1,8 @@
 package dungeonmania.entities.enemies;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import dungeonmania.Game;
 import dungeonmania.battles.BattleStatistics;
 import dungeonmania.battles.Battleable;
@@ -55,7 +58,16 @@ public abstract class Enemy extends Entity implements Battleable {
         movementStrategy.move(game.getMap(), this, game.getPlayer());
     }
 
+    public double getHealth() {
+        return getBattleStatistics().getHealth();
+    }
+
     protected void setMovementStrategy(MovementStrategy strategy) {
         this.movementStrategy = strategy;
+    }
+
+    public List<Position> getValidMovementPositions(GameMap map) {
+        return this.getPosition().getCardinallyAdjacentPositions().stream().filter(p -> map.canMoveTo(this, p))
+                .collect(Collectors.toList());
     }
 }

@@ -13,12 +13,11 @@ public class RandomStrategy implements MovementStrategy {
 
     @Override
     public void move(GameMap map, Enemy enemy, Player player) {
-        List<Position> pos = enemy.getPosition().getCardinallyAdjacentPositions();
-        pos = pos.stream().filter(p -> map.canMoveTo(enemy, p)).toList();
-        if (pos.size() == 0) {
+        List<Position> validPositions = enemy.getValidMovementPositions(map);
+        if (validPositions.isEmpty()) {
             map.moveTo(enemy, enemy.getPosition());
         } else {
-            map.moveTo(enemy, pos.get(randGen.nextInt(pos.size())));
+            map.moveTo(enemy, validPositions.get(randGen.nextInt(validPositions.size())));
         }
     }
 }

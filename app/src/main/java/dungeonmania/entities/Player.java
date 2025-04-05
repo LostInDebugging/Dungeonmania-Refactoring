@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.HashSet;
 
 import dungeonmania.battles.BattleStatistics;
@@ -20,7 +21,9 @@ import dungeonmania.entities.inventory.InventoryItem;
 import dungeonmania.entities.playerState.BaseState;
 import dungeonmania.entities.playerState.PlayerState;
 import dungeonmania.map.GameMap;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
+import dungeonmania.util.NameConverter;
 import dungeonmania.util.Position;
 
 public class Player extends Entity implements Battleable {
@@ -77,7 +80,7 @@ public class Player extends Entity implements Battleable {
     public void onOverlap(GameMap map, Entity entity) {
         if (entity instanceof Enemy enemy) {
             if (enemy instanceof Mercenary mercenary && mercenary.isAllied())
-                    return;
+                return;
             map.getGame().battle(this, enemy);
         }
     }
@@ -192,5 +195,19 @@ public class Player extends Entity implements Battleable {
 
     public void removePotionListener(PotionListener e) {
         potionListeners.remove(e);
+    }
+
+    public List<ItemResponse> getInventoryResponses() {
+        return inventory.getEntities().stream()
+                .map(entity -> new ItemResponse(entity.getId(), NameConverter.toSnakeCase(entity)))
+                .collect(Collectors.toList());
+    }
+
+    public double getHealth() {
+        return getBattleStatistics().getHealth();
+    }
+
+    public <T extends InventoryItem> List<T> getInventoryItems(Class<T> itemType) {
+        return getInventory().getEntities(itemType);
     }
 }

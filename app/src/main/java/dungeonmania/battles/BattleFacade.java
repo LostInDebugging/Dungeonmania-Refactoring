@@ -22,8 +22,8 @@ public class BattleFacade {
 
     public void battle(Game game, Player player, Enemy enemy) {
         // 0. init
-        double initialPlayerHealth = player.getBattleStatistics().getHealth();
-        double initialEnemyHealth = enemy.getBattleStatistics().getHealth();
+        double initialPlayerHealth = player.getHealth();
+        double initialEnemyHealth = enemy.getHealth();
         String enemyString = NameConverter.toSnakeCase(enemy);
 
         // 1. get and apply buff to player, using any relevant potions, inventory items and allies
@@ -34,7 +34,7 @@ public class BattleFacade {
         if (effectivePotion != null) {
             playerBuff = player.applyBuff(playerBuff);
         } else {
-            for (InventoryItem item : player.getInventory().getEntities(InventoryItem.class)) {
+            for (InventoryItem item : player.getInventoryItems(InventoryItem.class)) {
                 if (item instanceof Buffable) {
                     playerBuff = ((Buffable) item).applyBuff(playerBuff);
                     battleItems.add(item);
@@ -43,7 +43,7 @@ public class BattleFacade {
             }
         }
 
-        List<Mercenary> mercs = game.getMap().getEntities(Mercenary.class);
+        List<Mercenary> mercs = game.getEntitiesOfType(Mercenary.class);
         for (Mercenary merc : mercs) {
             if (!merc.isAllied())
                 continue;
