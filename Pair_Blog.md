@@ -223,6 +223,14 @@ buildable didn't actually have unique attributes that would be common to its sub
 
 [Merge Request 2](/put/links/here)
 
+    Fixed Deprecated methods
+    The Deprecated Method Warning is a signal that a method is outdated, while they still work they, are no longer recomended and can break our files in the future. They can be replacaed by better alternatives that improve code maintainability.
+    In this Request We refactored the deprecated translate() method to use setPosition() in GameMap.java and Bomb.java.
+    By addressing the warnings, we ensure our application continues to work reliably.
+
+
+[Merge Request 3](/put/links/here)
+
 [Briefly explain what you did]
 
 Add all other changes you made in the same format here:
