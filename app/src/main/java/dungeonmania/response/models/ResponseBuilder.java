@@ -1,15 +1,13 @@
 package dungeonmania.response.models;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import dungeonmania.Game;
 import dungeonmania.battles.BattleRound;
 import dungeonmania.entities.Entity;
 import dungeonmania.entities.Interactable;
-import dungeonmania.entities.inventory.Inventory;
 import dungeonmania.util.NameConverter;
+import java.util.stream.Collectors;
 
 /**
  * You may change this file at your own discretion.
@@ -17,19 +15,15 @@ import dungeonmania.util.NameConverter;
  */
 public class ResponseBuilder {
     public static DungeonResponse getDungeonResponse(Game game) {
-        List<EntityResponse> entityResponse = new ArrayList<>();
-        game.getMap().getEntities().forEach(e -> {
-            entityResponse.add(ResponseBuilder.getEntityResponse(game, e));
-        });
-        return new DungeonResponse(game.getId(), game.getName(), entityResponse,
-                (game.getPlayer() != null) ? getInventoryResponse(game.getPlayer().getInventory()) : null,
-                game.getBattleFacade().getBattleResponses(),
-                (game.getPlayer() != null) ? game.getPlayer().getBuildables() : null,
-                (game.getGoals().achieved(game)) ? "" : game.getGoals().toString(game));
-    }
+        List<EntityResponse> entityResponse = game.getAllEntities().stream().map(e -> getEntityResponse(game, e))
+                .collect(Collectors.toList());
 
-    private static List<ItemResponse> getInventoryResponse(Inventory inventory) {
-        return inventory.getEntities().stream().map(ResponseBuilder::getItemResponse).collect(Collectors.toList());
+        List<ItemResponse> inventoryResponse = game.getPlayerInventoryResponses();
+
+        return new DungeonResponse(game.getId(), game.getName(), entityResponse, inventoryResponse,
+                game.getBattleFacade().getBattleResponses(),
+                (game.getPlayer() != null) ? game.getAvailableBuildables() : null,
+                (game.getGoals().achieved(game)) ? "" : game.getGoals().toString(game));
     }
 
     public static ItemResponse getItemResponse(Entity entity) {
