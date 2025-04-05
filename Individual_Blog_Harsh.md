@@ -11,6 +11,7 @@
 
 - List the tasks you completed this week here
 - Monday: Completed task 1b
+- Wednesday: Completed task 1d
 
 ## Week 8
 
