@@ -14,6 +14,7 @@ import dungeonmania.entities.collectables.Bomb;
 import dungeonmania.entities.collectables.potions.Potion;
 import dungeonmania.entities.enemies.Enemy;
 import dungeonmania.entities.inventory.Inventory;
+import dungeonmania.entities.inventory.InventoryItem;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.goals.GoalTypes.Goal;
 import dungeonmania.map.GameMap;
@@ -45,6 +46,10 @@ public class Game {
         this.name = dungeonName;
         this.map = new GameMap();
         this.battleFacade = new BattleFacade();
+    }
+
+    public void removeInventoryItemFromPlayer(InventoryItem item) {
+        player.remove(item);
     }
 
     public void init() {

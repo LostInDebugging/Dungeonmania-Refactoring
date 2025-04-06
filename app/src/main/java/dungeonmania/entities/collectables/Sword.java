@@ -41,7 +41,7 @@ public class Sword extends CollectableItem implements Useable, Buffable {
     public void use(Game game) {
         durability--;
         if (durability <= 0) {
-            game.getPlayer().remove(this);
+            game.removeInventoryItemFromPlayer(this);
         }
     }
 

@@ -11,12 +11,4 @@ public abstract class StaticEntity extends Entity {
     @Override
     public void onOverlap(GameMap map, Entity entity) {
     }
-
-    @Override
-    public void onMovedAway(GameMap map, Entity entity) {
-    }
-
-    @Override
-    public void onDestroy(GameMap gameMap) {
-    }
 }

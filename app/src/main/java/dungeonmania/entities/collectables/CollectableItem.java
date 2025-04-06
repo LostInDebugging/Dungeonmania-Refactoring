@@ -11,6 +11,7 @@ public abstract class CollectableItem extends InventoryItem {
         super(position);
     }
 
+    @Override
     public void onOverlap(GameMap map, Entity entity) {
         if (entity instanceof Player player) {
             if (!player.pickUp(this))

@@ -49,7 +49,6 @@ public class Switch extends StaticEntity {
         }
     }
 
-    @Override
     public void onMovedAway(GameMap map, Entity entity) {
         if (entity instanceof Boulder) {
             activated = false;
