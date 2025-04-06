@@ -8,7 +8,7 @@ grammatical errors and correcting the answer for question 5 in the process.
 
 ## Week 7
 
-- Monday: Completed task 1a.
+- Completed tasks 1a, 1c, 1e and 1 Refactoring change for 1f
 
 ## Week 8
 
