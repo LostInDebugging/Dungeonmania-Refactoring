@@ -175,6 +175,8 @@
     buildable didn't actually have unique attributes that would be common to its subclasses.
     - Removed applyBuff and getDurability abstract methods from InventoryItem.
 
+    - This merge request initially contains a new Buildable interface, but we later realised it was useless as it implemented the onOverlap method whereas buildable items went straight to inventory. This was fixed in a later merge request - provided here: [Fixed in this merge request](/add/link/here/later)
+
 
 ### d) More Code Smells
 
@@ -232,10 +234,6 @@
 
 [Merge Request 3](/put/links/here)
 
-[Briefly explain what you did]
-
-[Merge Request 3](/put/links/here)
-
     All minor changes for LoD before a large change in GameMap.
     Made LoD improvments in ResponseBuilder with helper methods in Player, Game
     This was a better approach that prevents it from "knowing" the internal structure 
@@ -243,6 +241,13 @@
     Minor LoD improvement is Enemies same as above - Introducing helpers
 
 Add all other changes you made in the same format here:
+
+[Merge Request 4](TaskFDevR1)
+
+    - Removed Buildable.java: it contained only the onOverlap method which didn't make sense since built items go straight to inventory.
+    - Introduced a new CollectableItem class extending InventoryItem, in order to reduce code duplication in the onOverlap method across collectable items.
+    - fixed some code that answered 1c.
+
 
 ## Task 2) Evolution of Requirements 👽
 
