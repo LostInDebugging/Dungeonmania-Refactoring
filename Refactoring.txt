@@ -1,0 +1,31 @@
+Entity Methods: 
+    
+// returns true if the entity (parameter) can move onto this entity
+public boolean canMoveOnto(GameMap map, Entity entity);
+
+// takes care of what happens when an entity (parameter) comes into contact with this entity
+public void onOverlap(GameMap map, Entity entity);
+
+// Only enemies and ZombietoastSpawner have this method. Removes actions from this enemy in current and future ticks.
+public void onDestroy(GameMap map)
+
+LOD UNSAFE:
+
+Checked folders: battles, entities, exceptions
+
+battles/BattleFacade.java (battle) -- also code smell - long method
+
+entities/collectables/bomb.java (onPutDown)
+entities/enemies/MovementStrategy/LoopStrategy.java (move)
+entities/enemies/MovementStrategy/RandomStrategy.java (move)
+entities/enemies/MovementStrategy/RunawayStrategy.java (move)
+entities/enemies/enemy.java (onDestroy, getValidMovementPositions)
+entities/enemies/ZombieToastSpawner.java (onDestroy, interact)
+
+entities/inventory/Inventory.java (checkBuildCriteria)
+
+entities/Door.java (onOverlap, hasKey)
+
+entities/EntityFactory.java (spawnSpider, spawnZombie)
+
+entities/Portal.java (doTeleport)

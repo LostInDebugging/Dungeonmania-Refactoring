@@ -13,7 +13,7 @@ import dungeonmania.entities.enemies.MovementStrategy.MovementStrategy;
 import dungeonmania.map.GameMap;
 import dungeonmania.util.Position;
 
-public abstract class Enemy extends Entity implements Battleable {
+public abstract class Enemy extends Entity implements Battleable, Destroyable {
     private BattleStatistics battleStatistics;
     private MovementStrategy movementStrategy;
 
@@ -41,17 +41,11 @@ public abstract class Enemy extends Entity implements Battleable {
         }
     }
 
-    @Override
     public void onDestroy(GameMap map) {
         Game g = map.getGame();
         g.unsubscribe(getId());
         if (this instanceof PotionListener potionListener)
             map.getPlayer().removePotionListener(potionListener);
-    }
-
-    @Override
-    public void onMovedAway(GameMap map, Entity entity) {
-        return;
     }
 
     public void move(Game game) {

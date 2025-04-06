@@ -160,7 +160,7 @@
 
 ### c) Inheritance Design
 
-[Links to your merge requests](/put/links/here)
+[Links to your merge requests](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/6)
 
 > i. List one design principle that is violated by collectable objects based on the description above. Briefly justify your answer.
 
@@ -175,12 +175,12 @@
     buildable didn't actually have unique attributes that would be common to its subclasses.
     - Removed applyBuff and getDurability abstract methods from InventoryItem.
 
-    - This merge request initially contains a new Buildable interface, but we later realised it was useless as it implemented the onOverlap method whereas buildable items went straight to inventory. This was fixed in a later merge request - provided here: [Fixed in this merge request](/add/link/here/later)
+    - This merge request initially contains a new Buildable interface, but we later realised it was useless as it implemented the onOverlap method whereas buildable items went straight to inventory. This was fixed in a later merge request - provided here: [Fixed in this merge request](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/11)
 
 
 ### d) More Code Smells
 
-[Links to your merge requests](/put/links/here)
+[Links to your merge requests](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/5)
 
 > i. What code smell is present in the above snippet?
 
@@ -198,7 +198,7 @@
 
 ### e) Open-Closed Goals
 
-[Links to your merge requests](/put/links/here)
+[Links to your merge requests](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/7)
 
 > i. Do you think the design is of good quality here? Do you think it complies with the open-closed principle? Do you think the design should be changed?
 
@@ -242,13 +242,19 @@
 
 Add all other changes you made in the same format here:
 
-[Merge Request 4](TaskFDevR1)
+[Merge Request 4](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/11)
 
     - Removed Buildable.java: it contained only the onOverlap method which didn't make sense since built items go straight to inventory.
     - Introduced a new CollectableItem class extending InventoryItem, in order to reduce code duplication in the onOverlap method across collectable items.
     - fixed some code that answered 1c.
 
+[Merge Request 5](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/12)
 
+    - Removed onDestroy from Entity and instead created an interface - Destroyable. This interface is implemented by classes that need to clean up 
+    once they are destroyed from the map, which right now are ZombieToastSpawners and Enemies.
+    - Removed onMovedAway from Entity and instead only have it in switch. It does not make sense to have it in the entity class since only switch has some logic that is needed to be executed once an entity moves away from it.
+    - Fixed minor LoD violations in entities/buildables
+    - Added refactoring.txt - a file for planning further refactors.
 ## Task 2) Evolution of Requirements 👽
 
 ### a) Microevolution - Enemy Goal
