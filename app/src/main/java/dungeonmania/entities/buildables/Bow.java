@@ -2,13 +2,11 @@ package dungeonmania.entities.buildables;
 
 import dungeonmania.Game;
 import dungeonmania.battles.BattleStatistics;
-import dungeonmania.entities.Entity;
 import dungeonmania.entities.collectables.Buffable;
 import dungeonmania.entities.collectables.Useable;
 import dungeonmania.entities.inventory.InventoryItem;
-import dungeonmania.map.GameMap;
 
-public class Bow extends InventoryItem implements Buildable, Useable, Buffable {
+public class Bow extends InventoryItem implements Useable, Buffable {
     private int durability;
 
     public Bow(int durability) {
@@ -32,10 +30,5 @@ public class Bow extends InventoryItem implements Buildable, Useable, Buffable {
     @Override
     public int getDurability() {
         return durability;
-    }
-
-    @Override
-    public void onOverlap(GameMap map, Entity entity) {
-        return;
     }
 }
