@@ -5,6 +5,7 @@ import dungeonmania.entities.buildables.Bow;
 import dungeonmania.entities.buildables.Shield;
 import dungeonmania.entities.collectables.*;
 import dungeonmania.entities.enemies.*;
+import dungeonmania.entities.inventory.InventoryItem;
 import dungeonmania.map.GameMap;
 import dungeonmania.entities.collectables.potions.InvincibilityPotion;
 import dungeonmania.entities.collectables.potions.InvisibilityPotion;
@@ -109,12 +110,27 @@ public class EntityFactory {
                 allyAttack, allyDefence);
     }
 
-    public Bow buildBow() {
+    public Bow buildBow(List<Wood> woods, List<Arrow> arrows, List<InventoryItem> items) {
+        if (woods.size() >= 1 && arrows.size() >= 3) {
+            items.removeAll(List.of(woods.get(0), arrows.get(0), arrows.get(1), arrows.get(2)));
+        } else {
+            return null;
+        }
         int bowDurability = config.optInt("bow_durability");
         return new Bow(bowDurability);
     }
 
-    public Shield buildShield() {
+    public Shield buildShield(List<Wood> woods, List<Treasure> treasures, List<Key> keys, List<InventoryItem> items) {
+        if (woods.size() >= 2 && (treasures.size() >= 1 || keys.size() >= 1)) {
+            items.removeAll(List.of(woods.get(0), woods.get(1)));
+            if (treasures.size() >= 1) {
+                items.remove(treasures.get(0));
+            } else {
+                items.remove(keys.get(0));
+            }
+        } else {
+            return null;
+        }
         int shieldDurability = config.optInt("shield_durability");
         double shieldDefence = config.optInt("shield_defence");
         return new Shield(shieldDurability, shieldDefence);

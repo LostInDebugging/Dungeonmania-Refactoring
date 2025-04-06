@@ -9,6 +9,7 @@ import java.util.HashSet;
 
 import dungeonmania.battles.BattleStatistics;
 import dungeonmania.battles.Battleable;
+import dungeonmania.entities.buildables.BuildableType;
 import dungeonmania.entities.collectables.Bomb;
 import dungeonmania.entities.collectables.Treasure;
 import dungeonmania.entities.collectables.Useable;
@@ -64,8 +65,18 @@ public class Player extends Entity implements Battleable {
         return inventory.getBuildables();
     }
 
+    public BuildableType parseBuildable(String entity) {
+        if (entity.equals("shield")) {
+            return BuildableType.SHIELD;
+        } else if (entity.equals("bow")) {
+            return BuildableType.BOW;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
     public boolean build(String entity, EntityFactory factory) {
-        InventoryItem item = inventory.checkBuildCriteria(this, true, entity.equals("shield"), factory);
+        InventoryItem item = inventory.checkBuildCriteria(this, parseBuildable(entity), factory);
         if (item == null)
             return false;
         return inventory.add(item);
