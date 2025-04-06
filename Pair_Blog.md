@@ -255,6 +255,11 @@ Add all other changes you made in the same format here:
     - Removed onMovedAway from Entity and instead only have it in switch. It does not make sense to have it in the entity class since only switch has some logic that is needed to be executed once an entity moves away from it.
     - Fixed minor LoD violations in entities/buildables
     - Added refactoring.txt - a file for planning further refactors.
+
+[Merge Request 6](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/13)   
+
+    - Fixed hardcoding in Inventory.java by moving construction logic into EntityFactory.java.
+    - removed the remove boolean from the build method, and implemented an enum instead of boolean for keeping track of which buildable we're building.
 ## Task 2) Evolution of Requirements 👽
 
 ### a) Microevolution - Enemy Goal

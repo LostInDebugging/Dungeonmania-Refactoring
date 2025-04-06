@@ -8,6 +8,7 @@ import dungeonmania.entities.Entity;
 import dungeonmania.entities.EntityFactory;
 import dungeonmania.entities.Player;
 import dungeonmania.entities.buildables.Bow;
+import dungeonmania.entities.buildables.BuildableType;
 import dungeonmania.entities.collectables.Arrow;
 import dungeonmania.entities.collectables.Key;
 import dungeonmania.entities.collectables.Sword;
@@ -46,34 +47,12 @@ public class Inventory {
     }
 
     // Check whether a player has the supplies to build a particular buildable. If so, build the item.
-    // Currently since there are only two buildables we have a boolean to keep track of which buildable it is.
-    public InventoryItem checkBuildCriteria(Player p, boolean remove, boolean forceShield, EntityFactory factory) {
-
-        List<Wood> wood = getEntities(Wood.class);
-        List<Arrow> arrows = getEntities(Arrow.class);
-        List<Treasure> treasure = getEntities(Treasure.class);
-        List<Key> keys = getEntities(Key.class);
-
-        if (wood.size() >= 1 && arrows.size() >= 3 && !forceShield) {
-            if (remove) {
-                items.remove(wood.get(0));
-                items.remove(arrows.get(0));
-                items.remove(arrows.get(1));
-                items.remove(arrows.get(2));
-            }
-            return factory.buildBow();
-
-        } else if (wood.size() >= 2 && (treasure.size() >= 1 || keys.size() >= 1)) {
-            if (remove) {
-                items.remove(wood.get(0));
-                items.remove(wood.get(1));
-                if (treasure.size() >= 1) {
-                    items.remove(treasure.get(0));
-                } else {
-                    items.remove(keys.get(0));
-                }
-            }
-            return factory.buildShield();
+    public InventoryItem checkBuildCriteria(Player p, BuildableType type, EntityFactory factory) {
+        if (type == BuildableType.BOW) {
+            return factory.buildBow(getEntities(Wood.class), getEntities(Arrow.class), items);
+        } else if (type == BuildableType.SHIELD) {
+            return factory.buildShield(getEntities(Wood.class), getEntities(Treasure.class), getEntities(Key.class),
+                    items);
         }
         return null;
     }
