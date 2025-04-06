@@ -242,7 +242,7 @@
 
 Add all other changes you made in the same format here:
 
-[Merge Request 4](/put/links/here)
+[Merge Request 4](TaskFDevR1)
 
     - Removed Buildable.java: it contained only the onOverlap method which didn't make sense since built items go straight to inventory.
     - Introduced a new CollectableItem class extending InventoryItem, in order to reduce code duplication in the onOverlap method across collectable items.
