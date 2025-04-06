@@ -15,6 +15,7 @@ import dungeonmania.entities.Portal;
 import dungeonmania.entities.PotionListener;
 import dungeonmania.entities.Switch;
 import dungeonmania.entities.collectables.Bomb;
+import dungeonmania.entities.enemies.Destroyable;
 import dungeonmania.entities.enemies.Enemy;
 import dungeonmania.entities.enemies.ZombieToastSpawner;
 import dungeonmania.util.Direction;
@@ -126,15 +127,13 @@ public class GameMap {
     }
 
     /*
-     * Calls onMovedAway for each entity on a tile, given an entity that has just moved away from it.
-     * Notably, it calls the onMovedAway method of all entities being moved away from,
-     * not the entity that is doing the moving
+     * changed version - Calls onMovedAway only for switches, other entities do nothing when moved away from.
      */
     private void triggerMovingAwayEvent(Entity entity) {
         List<Runnable> callbacks = new ArrayList<>();
         getEntities(entity.getPosition()).forEach(e -> {
-            if (e != entity)
-                callbacks.add(() -> e.onMovedAway(this, entity));
+            if (e != entity && e instanceof Switch sw)
+                callbacks.add(() -> sw.onMovedAway(this, entity));
         });
         callbacks.forEach(callback -> {
             callback.run();
@@ -237,7 +236,10 @@ public class GameMap {
     // Destroy an entity from the game map
     public void destroyEntity(Entity entity) {
         removeNode(entity);
-        entity.onDestroy(this);
+        // clean up for entities that need to be cleaned up
+        if (entity instanceof Destroyable d) {
+            d.onDestroy(this);
+        }
     }
 
     public void addEntity(Entity entity) {

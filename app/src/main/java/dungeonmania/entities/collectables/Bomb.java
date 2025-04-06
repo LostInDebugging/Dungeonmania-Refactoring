@@ -55,16 +55,14 @@ public class Bomb extends CollectableItem {
         adjPosList.stream().forEach(node -> {
             List<Entity> entities = map.getEntities(node).stream().filter(Switch.class::isInstance).toList();
             entities.stream().map(Switch.class::cast).forEach(s -> s.subscribe(this, map));
-            entities.stream().map(Switch.class::cast).forEach(this::subscribe);
         });
     }
 
     public void activate(GameMap map) {
-        Bomb b = this;
-        int x = b.getPosition().getX();
-        int y = b.getPosition().getY();
-        for (int i = x - b.getRadius(); i <= x + b.getRadius(); i++) {
-            for (int j = y - b.getRadius(); j <= y + b.getRadius(); j++) {
+        int x = getPosition().getX();
+        int y = getPosition().getY();
+        for (int i = x - getRadius(); i <= x + getRadius(); i++) {
+            for (int j = y - getRadius(); j <= y + getRadius(); j++) {
                 map.destroyEntitiesOnPosition(i, j);
             }
         }
