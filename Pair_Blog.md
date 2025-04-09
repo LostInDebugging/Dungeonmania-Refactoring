@@ -268,11 +268,41 @@ Add all other changes you made in the same format here:
 
 **Assumptions**
 
-[Any assumptions made]
+    The current code does not track the number of defeated enemies. We assume that adding such a counter in the Game class is acceptable.
+
+    Enemy spawners are defined as instances of the ZombieToastSpawner class. Or more if added in the future.
+
+    The enemy goal is met only when two conditions are true:
+        The player has defeated at least a target number of enemies as specified in the configuration.
+        There are no remaining enemy spawners on the map.
+
+    The goal description (returned via toString()) will show a short string (e.g., ":enemies") similar to those in TreasureGoal and ExitGoal if the goal has not yet been achieved.
 
 **Design**
 
-[Design]
+    Updates in the Game Class:
+        New Field:
+        Add an integer field defeatedEnemies to track how many enemies have been defeated.
+        New Getters:
+        Implement public int getDefeatedEnemies() to allow other classes to access this count.
+
+        Battle Method Modification:
+        Update the battle(Player player, Enemy enemy) method so that when an enemy’s health falls to or below zero, the defeatedEnemies counter is incremented.
+
+    Implementation of the EnemyGoal Class:
+        Create a new class named EnemyGoal (placed in dungeonmania.goals.GoalTypes), which extends BasicGoal.
+        Field:
+        A private int enemyTarget field is used to store the target number of enemy defeats.
+        Methods:
+            achieved(Game game):
+            This method returns true only when:
+                game.getDefeatedEnemies() >= enemyTarget
+                The map’s entity list contains no instances of ZombieToastSpawner.
+            toString(Game game):
+            Returns a descriptive string (e.g., ":enemies") if the goal is not met, or an empty string if it is achieved.
+
+    GoalFactory Update:
+        In the GoalFactory.java file, add a new case to the switch statement to handle a goal type of "enemies". This case will use the configuration value for "enemy_goal" to create an EnemyGoal instance.
 
 **Changes after review**
 
@@ -280,7 +310,14 @@ Add all other changes you made in the same format here:
 
 **Test list**
 
-[Test List]
+    Possible test list
+    Test 1: Verify that when the player has not defeated any enemy- EnemyGoal.achieved(game) returns false.
+
+    Test 2: Simulate a battle where the enemy is defeated, incrementing the counter; if the number of defeated enemies is less than the target, the goal should still be false.
+
+    Test 3: Ensure that if the required number of enemies are defeated but at least one enemy spawner (e.g., a ZombieToastSpawner) remains on the map, the goal remains unachieved.
+
+    Test 4: Confirm that when conditions are met, the defeated enemy count is at the target count and all spawners have been cleared—the goal returns true.
 
 **Other notes**
 
