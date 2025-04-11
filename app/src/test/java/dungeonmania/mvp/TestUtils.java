@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.json.JSONObject;
 
 public class TestUtils {
@@ -78,6 +77,17 @@ public class TestUtils {
         int xDiff = pos1.getX() - pos2.getX();
         int yDiff = pos1.getY() - pos2.getY();
         return Math.sqrt((xDiff * xDiff) + (yDiff * yDiff));
+    }
+
+    public static int getDefeatedEnemyCount(DungeonResponse initialResponse, DungeonResponse currentResponse,
+            String enemyType) {
+        int initialCount = (int) initialResponse.getEntities().stream()
+                .filter(entity -> entity.getType().equals(enemyType)).count();
+
+        int currentCount = (int) currentResponse.getEntities().stream()
+                .filter(entity -> entity.getType().equals(enemyType)).count();
+
+        return initialCount - currentCount;
     }
 
     public static List<Position> getSpiderTrajectory(Position spawnPos) {
