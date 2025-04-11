@@ -33,7 +33,7 @@ public class Game {
     public static final int PLAYER_MOVEMENT = 0;
     public static final int POTION_BRIBE_UPDATE = 1;
     public static final int AI_MOVEMENT = 2;
-
+    private int defeatedEnemies = 0;
     private ComparableCallback currentAction = null;
 
     private int tickCount = 0;
@@ -46,6 +46,10 @@ public class Game {
         this.name = dungeonName;
         this.map = new GameMap();
         this.battleFacade = new BattleFacade();
+    }
+
+    public int getDefeatedEnemies() {
+        return defeatedEnemies;
     }
 
     public void removeInventoryItemFromPlayer(InventoryItem item) {
@@ -90,6 +94,7 @@ public class Game {
         }
         if (enemy.getBattleStatistics().getHealth() <= 0) {
             map.destroyEntity(enemy);
+            defeatedEnemies++;
         }
     }
 

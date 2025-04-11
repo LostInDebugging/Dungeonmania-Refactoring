@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import dungeonmania.goals.GoalTypes.AndGoal;
 import dungeonmania.goals.GoalTypes.BoulderGoal;
+import dungeonmania.goals.GoalTypes.EnemyGoal;
 import dungeonmania.goals.GoalTypes.ExitGoal;
 import dungeonmania.goals.GoalTypes.Goal;
 import dungeonmania.goals.GoalTypes.OrGoal;
@@ -29,6 +30,10 @@ public class GoalFactory {
         case "treasure" -> {
             int targetAmount = config.optInt("treasure_goal", 1);
             yield new TreasureGoal(targetAmount);
+        }
+        case "enemies" -> {
+            int enemyTarget = config.optInt("enemy_goal", 0); // use default if not specified
+            yield new EnemyGoal(enemyTarget);
         }
         default -> null;
         };
