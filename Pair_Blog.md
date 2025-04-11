@@ -303,10 +303,13 @@ Add all other changes you made in the same format here:
 
     GoalFactory Update:
         In the GoalFactory.java file, add a new case to the switch statement to handle a goal type of "enemies". This case will use the configuration value for "enemy_goal" to create an EnemyGoal instance.
+    
+    Added a test to manually check if counter increases during game.
+
 
 **Changes after review**
 
-[Design review/Changes made]
+    No changes
 
 **Test list**
 
