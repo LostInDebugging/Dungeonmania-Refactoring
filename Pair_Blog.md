@@ -326,7 +326,7 @@ Add all other changes you made in the same format here:
 
 [Any other notes]
 
-### Choice 1 (Insert choice)
+### Choice 1 (Task 2f - Logic switches)
 
 [Links to your merge requests](/put/links/here)
 
@@ -344,7 +344,31 @@ Add all other changes you made in the same format here:
 
 **Test list**
 
-[Test List]
+- Composite Logic tests:
+    1. Check OR requirements met
+    2. Check OR requirements not met
+    3. Check AND requirements met
+    4. check AND requirements not met
+    5. check XOR requirements met
+    6. check XOR requirements not met
+    7. check CO_AND requirements met
+    8. check CO_AND requirements not met (All adjacent conductors have current but not in same tick)
+    9. check CO_AND requirements not met (Not all adjacent conductors have current)
+    10. for CO_AND, check that another conductor does not change the start tick of an already active conductor 
+    (and hence does not turn off the CO_AND entity)
+
+- Logic functionality check (for each test, we test OR, AND, XOR and CO_AND too)
+    1. Check that light bulb activates next to activated switch
+    2. Check that bomb activates next to activated switch
+    3. Check that Switch door activates next to activated switch
+    5. Check that current does not propagate through inactive switches, i.e. 
+        s -> is -> e, where s, is and e are switch, inactive switch and logical entity respectively,
+        should not let e be activated.
+    6. Check that Logical entities activate next to activated wire
+    7. Check that wire propagates current when next to active switch
+    8. Check that non logical bombs do not interact with active conductors
+    9. Check that if there are multiple switches powering a logic entity, then turning
+    one off does not deactivate the logic entity.
 
 **Other notes**
 
