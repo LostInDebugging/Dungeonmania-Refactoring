@@ -332,11 +332,51 @@ Add all other changes you made in the same format here:
 
 **Assumptions**
 
-[Any assumptions made]
+    - A player cannot pick up the wire and light bulb and store them in their inventory 
+    - Whether the player can stand on light bulbs is undefined
+    - The behaviour of whether boulders can be pushed onto wires & lightbulbs is undefined
+    - Whether sunstones can open switch doors is undefined
+
+    - Any scenario where the order in which activated components perform their action is undefined.
+    For example, this case where a logical bomb might activate and destroy parts of a circuit before other logical components are able to activate
+    - Bombs exploding affecting a circuit is undefined
 
 **Design**
 
-[Design]
+- Split into 3 MRs:
+    1. Writing test cases
+    2. Introduction of logical entities and the OR logic
+    3. AND, XOR and CO_AND logic
+
+Initial Design considerations: 
+
+1. Test cases - Already wrote basic test case scenarios in pair blog
+2. Introduction of logical entities and the OR logic
+    - Wires 
+        - Inherit from the staticEntity class and contains methods for subscribing to a switch
+        - subscribes to a particular switch if there is a valid conductive path to the switch
+        - this way, if a particular switch is turned off, we simply check for each subscribing conductor whether
+        it is subscribed to an on switch. If it is, then it stays on, and turns off otherwise.
+        - Similarly, when a particular switch is turned on, then each subscribing conductor should be turned on
+    - Logic door/lightbulb/logic bomb
+        - We simply check the logic condition and check cardinally adjacent directions for 
+        active current and turn on/off based on that
+        - switch door inherits from door and logical bombs inherit from bombs and implement the logical interface
+        - lightbulbs inherit from staticEntity and implement the logical interface
+    - The logical interface
+        - Contains a method that takes in a LogicCondition and gameMap as a parameter and returns
+        true if the condition is satisfied, and false otherwise
+    - The LogicCondition abstract class
+        - All the concrete condition classes inherit from LogicCondition and have a method
+        called isSatisfied which returns true if the logical condition is satisfied.
+3. AND, XOR and CO_AND logic
+    - Checking AND and XOR is simply a matter of checking adjacent tiles for active conductors
+    - However, for CO_AND we will need to somehow need a global tick counter.
+    - The current plan is to have a tickCount in the Game class, and then each conductor will 
+    have a tickActivated field which will store the number of the first tick that activated 
+    that conductor. If a wire is already on and a switch that would turn that wire on
+    is switched on, then the tickCount should not be updated. 
+
 
 **Changes after review**
 
@@ -357,16 +397,14 @@ Add all other changes you made in the same format here:
     10. for CO_AND, check that another conductor does not change the start tick of an already active conductor 
     (and hence does not turn off the CO_AND entity)
 
-- Logic functionality check (for each test, we test OR, AND, XOR and CO_AND too)
     1. Check that light bulb activates next to activated switch
-    2. Check that bomb activates next to activated switch
+    2. Check that logical bomb activates next to activated switch
     3. Check that Switch door activates next to activated switch
     5. Check that current does not propagate through inactive switches, i.e. 
         s -> is -> e, where s, is and e are switch, inactive switch and logical entity respectively,
         should not let e be activated.
     6. Check that Logical entities activate next to activated wire
     7. Check that wire propagates current when next to active switch
-    8. Check that non logical bombs do not interact with active conductors
     9. Check that if there are multiple switches powering a logic entity, then turning
     one off does not deactivate the logic entity.
 
