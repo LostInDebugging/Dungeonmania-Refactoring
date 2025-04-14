@@ -384,7 +384,7 @@ Initial Design considerations:
 
 **Test list**
 
-- Composite Logic tests:
+- Conditional Logic tests:
     1. Check OR requirements met
     2. Check OR requirements not met
     3. Check AND requirements met
@@ -397,6 +397,7 @@ Initial Design considerations:
     10. for CO_AND, check that another conductor does not change the start tick of an already active conductor 
     (and hence does not turn off the CO_AND entity)
 
+- Logical Entity tests:
     1. Check that light bulb activates next to activated switch
     2. Check that logical bomb activates next to activated switch
     3. Check that Switch door activates next to activated switch
@@ -405,7 +406,7 @@ Initial Design considerations:
         should not let e be activated.
     6. Check that Logical entities activate next to activated wire
     7. Check that wire propagates current when next to active switch
-    9. Check that if there are multiple switches powering a logic entity, then turning
+    8. Check that if there are multiple switches powering a logic entity, then turning
     one off does not deactivate the logic entity.
 
 **Other notes**
