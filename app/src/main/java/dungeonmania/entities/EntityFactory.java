@@ -2,6 +2,8 @@ package dungeonmania.entities;
 
 import dungeonmania.Game;
 import dungeonmania.entities.buildables.Bow;
+import dungeonmania.entities.buildables.MidnightArmour;
+import dungeonmania.entities.buildables.Sceptre;
 import dungeonmania.entities.buildables.Shield;
 import dungeonmania.entities.collectables.*;
 import dungeonmania.entities.enemies.*;
@@ -19,10 +21,12 @@ import org.json.JSONObject;
 
 public class EntityFactory {
     private JSONObject config;
+    private Game game;
     private Random ranGen = new Random();
 
-    public EntityFactory(JSONObject config) {
+    public EntityFactory(JSONObject config, Game game) {
         this.config = config;
+        this.game = game;
     }
 
     public Entity createEntity(JSONObject jsonEntity) {
@@ -85,7 +89,7 @@ public class EntityFactory {
     public Player buildPlayer(Position pos) {
         double playerHealth = config.optDouble("player_health", Player.DEFAULT_HEALTH);
         double playerAttack = config.optDouble("player_attack", Player.DEFAULT_ATTACK);
-        return new Player(pos, playerHealth, playerAttack);
+        return new Player(pos, playerHealth, playerAttack, game.getMap());
     }
 
     public ZombieToast buildZombieToast(Position pos) {
@@ -134,6 +138,70 @@ public class EntityFactory {
         int shieldDurability = config.optInt("shield_durability");
         double shieldDefence = config.optInt("shield_defence");
         return new Shield(shieldDurability, shieldDefence);
+    }
+
+    public Sceptre buildSceptre(List<Wood> woods, List<Arrow> arrows, List<Key> keys, List<Treasure> treasures,
+            List<SunStone> sunStones, List<InventoryItem> items, JSONObject config) {
+        boolean slot1Satisfied = false;
+        if (woods.size() >= 1) {
+            items.remove(woods.get(0));
+            slot1Satisfied = true;
+        } else if (arrows.size() >= 2) {
+            items.remove(arrows.get(0));
+            items.remove(arrows.get(1));
+            slot1Satisfied = true;
+        }
+        if (!slot1Satisfied) {
+            return null;
+        }
+
+        boolean slot2Satisfied = false;
+        boolean usedSunStoneForSlot2 = false;
+        if (keys.size() >= 1) {
+            items.remove(keys.get(0));
+            slot2Satisfied = true;
+        } else if (treasures.size() >= 1) {
+            items.remove(treasures.get(0));
+            slot2Satisfied = true;
+        } else if (sunStones.size() >= 2) {
+            items.remove(sunStones.get(0));
+            usedSunStoneForSlot2 = true;
+            slot2Satisfied = true;
+        }
+        if (!slot2Satisfied) {
+            return null;
+        }
+
+        if (sunStones.size() < 1) {
+            return null;
+        }
+        items.remove(sunStones.get(0));
+
+        int duration = config.optInt("mind_control_duration", 2);
+
+        return new Sceptre(null, duration);
+    }
+
+    public MidnightArmour buildMidnightArmour(List<Sword> swords, List<SunStone> sunStones, List<InventoryItem> items,
+            Game game, JSONObject config) {
+
+        if (!swords.isEmpty() && !sunStones.isEmpty()
+                && game.getMap().getEntities(dungeonmania.entities.enemies.ZombieToast.class).isEmpty()) {
+            items.remove(swords.get(0));
+            items.remove(sunStones.get(0));
+            double bonusAttack = config.optDouble("midnight_armour_attack", 2.0);
+            double bonusDefence = config.optDouble("midnight_armour_defence", 2.0);
+            return new MidnightArmour(null, bonusAttack, bonusDefence);
+        }
+        return null;
+    }
+
+    public JSONObject getConfig() {
+        return config;
+    }
+
+    public Game getGame() {
+        return game;
     }
 
     private Entity constructEntity(JSONObject jsonEntity, JSONObject config) {
@@ -185,6 +253,8 @@ public class EntityFactory {
             return new Door(pos, jsonEntity.getInt("key"));
         case "key":
             return new Key(pos, jsonEntity.getInt("key"));
+        case "sun_stone":
+            return new SunStone(pos);
         default:
             throw new IllegalArgumentException(
                     String.format("Failed to recognise '%s' entity in EntityFactory", jsonEntity.getString("type")));

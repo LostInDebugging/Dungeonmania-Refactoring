@@ -11,13 +11,25 @@ import dungeonmania.entities.buildables.Bow;
 import dungeonmania.entities.buildables.BuildableType;
 import dungeonmania.entities.collectables.Arrow;
 import dungeonmania.entities.collectables.Key;
+import dungeonmania.entities.collectables.SunStone;
 import dungeonmania.entities.collectables.Sword;
 import dungeonmania.entities.collectables.Treasure;
 import dungeonmania.entities.collectables.Useable;
 import dungeonmania.entities.collectables.Wood;
+import dungeonmania.map.GameMap;
 
 public class Inventory {
     private List<InventoryItem> items = new ArrayList<>();
+    private GameMap map;
+
+    // Modified the constructor to accept a GameMap
+    public Inventory(GameMap map) {
+        this.map = map;
+    }
+
+    private boolean noZombiesPresent() {
+        return map.getEntities(dungeonmania.entities.enemies.ZombieToast.class).isEmpty();
+    }
 
     public boolean add(InventoryItem item) {
         items.add(item);
@@ -43,6 +55,15 @@ public class Inventory {
         if (wood >= 2 && (treasure >= 1 || keys >= 1)) {
             result.add("shield");
         }
+
+        if ((wood >= 1 || arrows >= 2) && (keys >= 1 || treasure >= 1) && count(SunStone.class) >= 1) {
+            result.add("sceptre");
+        }
+
+        if (count(Sword.class) >= 1 && count(SunStone.class) >= 1 && noZombiesPresent()) {
+            result.add("midnight_armour");
+        }
+
         return result;
     }
 
@@ -53,6 +74,17 @@ public class Inventory {
         } else if (type == BuildableType.SHIELD) {
             return factory.buildShield(getEntities(Wood.class), getEntities(Treasure.class), getEntities(Key.class),
                     items);
+        } else if (type == BuildableType.SCEPTRE) {
+            List<Wood> woods = getEntities(Wood.class);
+            List<Arrow> arrows = getEntities(Arrow.class);
+            List<Key> keys = getEntities(Key.class);
+            List<Treasure> treasures = getEntities(Treasure.class);
+            List<SunStone> sunStones = getEntities(SunStone.class);
+            return factory.buildSceptre(woods, arrows, keys, treasures, sunStones, items, factory.getConfig());
+        } else if (type == BuildableType.MIDNIGHT_ARMOUR) {
+            List<Sword> swords = getEntities(Sword.class);
+            List<SunStone> sunStones = getEntities(SunStone.class);
+            return factory.buildMidnightArmour(swords, sunStones, items, factory.getGame(), factory.getConfig());
         }
         return null;
     }

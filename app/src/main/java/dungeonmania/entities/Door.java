@@ -1,10 +1,10 @@
 package dungeonmania.entities;
 
 import dungeonmania.map.GameMap;
-
 import dungeonmania.entities.collectables.Key;
 import dungeonmania.entities.enemies.Spider;
 import dungeonmania.entities.inventory.Inventory;
+import dungeonmania.entities.collectables.SunStone;
 import dungeonmania.util.Position;
 
 public class Door extends StaticEntity {
@@ -21,7 +21,10 @@ public class Door extends StaticEntity {
         if (open || entity instanceof Spider) {
             return true;
         }
-        return (entity instanceof Player player && hasKey(player));
+        if (entity instanceof Player player) {
+            return hasMatchingKey(player) || hasSunStone(player);
+        }
+        return false;
     }
 
     @Override
@@ -30,19 +33,25 @@ public class Door extends StaticEntity {
             return;
 
         Inventory inventory = player.getInventory();
-        Key key = inventory.getFirst(Key.class);
 
-        if (hasKey(player)) {
+        if (hasMatchingKey(player)) {
+
+            Key key = inventory.getFirst(Key.class);
             inventory.remove(key);
+            open();
+        } else if (hasSunStone(player)) {
             open();
         }
     }
 
-    private boolean hasKey(Player player) {
-        Inventory inventory = player.getInventory();
-        Key key = inventory.getFirst(Key.class);
+    private boolean hasMatchingKey(Player player) {
+        Inventory inv = player.getInventory();
+        Key key = inv.getFirst(Key.class);
+        return key != null && key.getnumber() == number;
+    }
 
-        return (key != null && key.getnumber() == number);
+    private boolean hasSunStone(Player player) {
+        return player.getInventory().getFirst(SunStone.class) != null;
     }
 
     public boolean isOpen() {
@@ -52,5 +61,4 @@ public class Door extends StaticEntity {
     public void open() {
         open = true;
     }
-
 }
