@@ -1,0 +1,100 @@
+{
+    "entities": [
+        {
+            "x": 5,
+            "y": 2,
+            "type": "wire"
+        },
+        {
+            "x": 6,
+            "y": 2,
+            "type": "wire"
+        },
+        {
+            "x": 5,
+            "y": 3,
+            "type": "light_bulb_off",
+            "logic": "xor"
+        },
+        {
+            "x": 6,
+            "y": 3,
+            "type": "wire"
+        },
+        {
+            "x": 7,
+            "y": 3,
+            "type": "wire"
+        },
+        {
+            "x": 3,
+            "y": 4,
+            "type": "wire"
+        },
+        {
+            "x": 4,
+            "y": 4,
+            "type": "bomb",
+            "logic": "xor"
+        },
+        {
+            "x": 5,
+            "y": 4,
+            "type": "switch"
+        },
+        {
+            "x": 6,
+            "y": 4,
+            "type": "switch_door",
+            "logic": "xor"
+        },
+        {
+            "x": 7,
+            "y": 4,
+            "type": "wire"
+        },
+        {
+            "x": 3,
+            "y": 5,
+            "type": "wire"
+        },
+        {
+            "x": 4,
+            "y": 5,
+            "type": "wire"
+        },
+        {
+            "x": 5,
+            "y": 5,
+            "type": "switch"
+        },
+        {
+            "x": 6,
+            "y": 5,
+            "type": "wire"
+        },
+        {
+            "x": 7,
+            "y": 5,
+            "type": "wire"
+        },
+        {
+            "x": 5,
+            "y": 6,
+            "type": "boulder"
+        },
+        {
+            "x": 5,
+            "y": 7,
+            "type": "player"
+        },
+        {
+            "x": 9,
+            "y": 9,
+            "type": "exit"
+        }
+    ],
+    "goal-condition": {
+        "goal": "exit"
+    }
+}
