@@ -434,6 +434,10 @@ Below is a summary of the test cases written to verify the buildable functionali
     Test 8: Building Sceptre Fails When No Ingredients Are Present
     Test 9: Mind control using sceptre on a mercenary
 
+    Extra tests:
+    Mind control using sceptre on a mercenary and effect expires after duration 
+    Building sceptre prioritizes key over treasure when both are present
+
 **Other notes**
 
 [Any other notes]

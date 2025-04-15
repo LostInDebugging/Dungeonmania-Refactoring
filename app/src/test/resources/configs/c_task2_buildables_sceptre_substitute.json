@@ -1,0 +1,9 @@
+{
+    "mind_control_duration": 2,
+    "bow_durability": 3,
+    "sword_attack": 2,
+    "sword_durability": 1,
+    "treasure_goal": 4,
+    "player_attack": 1,
+    "player_health": 1
+}
