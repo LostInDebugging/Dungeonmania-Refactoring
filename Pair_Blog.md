@@ -401,14 +401,16 @@ Initial Design considerations:
     1. Check that light bulb activates next to activated switch
     2. Check that logical bomb activates next to activated switch
     3. Check that Switch door activates next to activated switch
-    5. Check that current does not propagate through inactive switches, i.e. 
+    4. Check that current does not propagate through inactive switches, i.e. 
         s -> is -> e, where s, is and e are switch, inactive switch and logical entity respectively,
         should not let e be activated.
-    6. Check that Logical entities activate next to activated wire
-    7. Check that wire propagates current when next to active switch
-    8. Check that if there are multiple switches powering a logic entity, then turning
+    5. Check that Logical entities activate next to activated wire
+    6. Check that wire propagates current when next to active switch
+    7. Check that if there are multiple switches powering a logic entity, then turning
     one off does not deactivate the logic entity.
 
+Some of the tests I have written target a specific point, but in doing so, they manage
+to target some other points too if they pass
 **Other notes**
 
 [Any other notes]
