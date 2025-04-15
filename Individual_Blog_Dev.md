@@ -12,7 +12,7 @@ grammatical errors and correcting the answer for question 5 in the process.
 
 ## Week 8
 
-- List the tasks you completed this week here
+- Completed 2 Refactoring changes + planning of 2f logical switches
 
 ## Week 9
 
