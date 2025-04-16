@@ -415,17 +415,71 @@ to target some other points too if they pass
 
 [Any other notes]
 
-### Choice 2 (Insert choice)
+### Choice 2 (Sunstone and More Buildables)
 
 [Links to your merge requests](/put/links/here)
 
 **Assumptions**
 
-[Any assumptions made]
+    Sun Stone:
+        Can be picked up by the player.
+        Counts as treasure toward the treasure goal.
+        Can be used to open any door. When used for door opening, the Sun Stone is retained rather than consumed.
+        Can be used interchangeably with treasure or keys when building items; however, if the player possesses sufficient treasure or keys, those will be preferred.
+        When used as a listed ingredient in crafting (e.g. for sceptre), it is consumed.
+
+    Sceptre:
+        The recipe requires:
+            Slot 1: 1 wood (preferred) OR 2 arrows.
+            Slot 2: 1 key (preferred) OR 1 treasure.
+            Slot 3: 1 sun stone.
+        After building, the sceptre appears in the inventory and the ingredients used in the recipe are consumed.
+
+    Midnight Armour:
+        Can be built with 1 sword and 1 sun stone.
+        It can only be built if no zombies are present in the dungeon.
+        When equipped, it provides additional attack and defence bonuses and its effect lasts permanently.
+        After building, the sword and the sun stone used in the recipe are consumed.
+
+        Door Interaction with Sun Stone:
+
+        When a door is locked and the player does not have a matching key, the door can be opened by using a Sun Stone.
+        In this case, the door opens while the Sun Stone is retained in the inventory.
 
 **Design**
 
-[Design]
+Updates to Inventory and Buildables:
+
+    The Inventory.getBuildables() method needs to be updated to include:
+        “sceptre” and "midnight_armour” 
+
+Entity Factory Changes:
+
+    New build methods to be added in EntityFactory:
+
+        buildSceptre(...) to build a sceptre from either preferred or substitute ingredients.
+        buildMidnightArmour(...) to build midnight armour with 1 sword and 1 sun stone if no zombies exist.
+
+Door Logic:
+
+    The Door class needs updating to allow doors to be opened via a Sun Stone in the absence of a key.
+        Inventory Updates:
+
+
+    Ingredient Consumption:
+        The crafting logic should remove consumed ingredients from the inventory appropriately. In the case of the sun stone:
+            When used for crafting (sceptre or midnight armour), it is removed.
+            In the door opening scenario, the sun stone is not consumed but is instead retained.
+
+Mercenary Interaction
+
+    Bribing vs. Mind-Control:
+
+        The mercenary’s interaction logic remains mostly intact for bribing.
+
+        With the introduction of the sceptre, we need to implement a “mind control” effect,
+        which behaves similarly to a bribe by making them allied for a fixed number of ticks 
+        (as defined by the mind_control_duration in the configuration) instead of regular bribing for gold
 
 **Changes after review**
 
@@ -433,7 +487,21 @@ to target some other points too if they pass
 
 **Test list**
 
-[Test List]
+Below is a summary of the test cases written to verify the buildable functionality:
+
+    Test 1: Building Sceptre with Preferred Ingredients
+    Test 2: Building Sceptre with Substitute Ingredients (Arrows and Treasure)
+    Test 3: Building Midnight Armour When No Zombies Are Present
+    Test 4: Door Opening with a Sun Stone (Retained After Use)
+    Test 5: Building Midnight Armour Fails When Zombies Are Present
+    Test 6: Building Sceptre Fails When Sun Stone Is Missing
+    Test 7: Building Midnight Armour with Extra Sun Stones
+    Test 8: Building Sceptre Fails When No Ingredients Are Present
+    Test 9: Mind control using sceptre on a mercenary
+
+    Extra tests:
+    Mind control using sceptre on a mercenary and effect expires after duration 
+    Building sceptre prioritizes key over treasure when both are present
 
 **Other notes**
 
