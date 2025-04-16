@@ -157,6 +157,7 @@ public class Game {
     }
 
     public int tick() {
+        currTick++;
         isInTick = true;
         while (!tickActions.isEmpty()) {
             currentAction = tickActions.poll();

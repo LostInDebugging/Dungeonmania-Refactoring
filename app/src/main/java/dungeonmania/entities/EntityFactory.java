@@ -1,6 +1,12 @@
 package dungeonmania.entities;
 
 import dungeonmania.Game;
+import dungeonmania.entities.LogicExtension.LightBulb;
+import dungeonmania.entities.LogicExtension.LogicCondition;
+import dungeonmania.entities.LogicExtension.LogicConditions.AndCondition;
+import dungeonmania.entities.LogicExtension.LogicConditions.CoAndCondition;
+import dungeonmania.entities.LogicExtension.LogicConditions.OrCondition;
+import dungeonmania.entities.LogicExtension.LogicConditions.XorCondition;
 import dungeonmania.entities.buildables.Bow;
 import dungeonmania.entities.buildables.Shield;
 import dungeonmania.entities.collectables.*;
@@ -185,9 +191,26 @@ public class EntityFactory {
             return new Door(pos, jsonEntity.getInt("key"));
         case "key":
             return new Key(pos, jsonEntity.getInt("key"));
+        case "light_bulb_off":
+            return new LightBulb(pos, constructCondition(jsonEntity.getString("logic")));
         default:
             throw new IllegalArgumentException(
                     String.format("Failed to recognise '%s' entity in EntityFactory", jsonEntity.getString("type")));
+        }
+    }
+
+    private LogicCondition constructCondition(String logicKey) {
+        switch (logicKey) {
+        case "and":
+            return new AndCondition();
+        case "or":
+            return new OrCondition();
+        case "co_and":
+            return new CoAndCondition();
+        case "xor":
+            return new XorCondition();
+        default:
+            throw new IllegalArgumentException();
         }
     }
 }
