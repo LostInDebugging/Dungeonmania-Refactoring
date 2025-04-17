@@ -219,12 +219,12 @@
 
 ### f) Open Refactoring
 
-[Merge Request 1](/put/links/here)
+[Merge Request 1](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/8)
 
     I created a StaticEntity class that provides default implementation for methods like onOverlap, onMovedAway and onDestroy removing repeated empty methods for classes such such Exit, Wall, Door, Boulder, Switch, and InventoryItem which now extend StaticEntity.
     It improves the inheritance structure and enforcing cleaner design.
 
-[Merge Request 2](/put/links/here)
+[Merge Request 2](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/9)
 
     Fixed Deprecated methods
     The Deprecated Method Warning is a signal that a method is outdated, while they still work they, are no longer recomended and can break our files in the future. They can be replacaed by better alternatives that improve code maintainability.
@@ -232,7 +232,7 @@
     By addressing the warnings, we ensure our application continues to work reliably.
 
 
-[Merge Request 3](/put/links/here)
+[Merge Request 3](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/10)
 
     All minor changes for LoD before a large change in GameMap.
     Made LoD improvments in ResponseBuilder with helper methods in Player, Game
@@ -260,11 +260,16 @@ Add all other changes you made in the same format here:
 
     - Fixed hardcoding in Inventory.java by moving construction logic into EntityFactory.java.
     - removed the remove boolean from the build method, and implemented an enum instead of boolean for keeping track of which buildable we're building.
+
+[Merge Request 7](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/19)
+    Changes to GameMap.java:
+        - Changing to Query over Temp where possible (and using streams)
+        - Moved switch-wire connection establishing to GameMap.java
 ## Task 2) Evolution of Requirements 👽
 
 ### a) Microevolution - Enemy Goal
 
-[Links to your merge requests](/put/links/here)
+[Links to your merge requests](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/14)
 
 **Assumptions**
 
@@ -328,7 +333,8 @@ Add all other changes you made in the same format here:
 
 ### Choice 1 (Task 2f - Logic switches)
 
-[Links to your merge requests](/put/links/here)
+[MR1](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/16)
+[MR2](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/18)
 
 **Assumptions**
 
@@ -424,7 +430,7 @@ I ended up doing only 2 MRs: 1 for the tests and 1 for the implementation
 
 ### Choice 2 (Sunstone and More Buildables)
 
-[Links to your merge requests](/put/links/here)
+[Links to your merge requests](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/17)
 
 **Assumptions**
 
@@ -540,9 +546,10 @@ Below is a summary of the test cases written to verify the buildable functionali
 
 ## Task 3) Investigation Task ⁉️
 
-[Merge Request 1](/put/links/here)
+[Merge Request 1](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/19)
 
-[Briefly explain what you did]
+- Bug in GameMap where onMovedAway for switch was called by every entity.
+- Fixed during a refactoring change
 
 [Merge Request 2](/put/links/here)
 

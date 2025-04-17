@@ -16,4 +16,5 @@ grammatical errors and correcting the answer for question 5 in the process.
 
 ## Week 9
 
-- Completed 1 refactoring change + Task 2f Logic Switches (implementation + testing)
+- Completed 2 refactoring change + Task 2f Logic Switches (implementation + testing)
+- 1 Bug fix
