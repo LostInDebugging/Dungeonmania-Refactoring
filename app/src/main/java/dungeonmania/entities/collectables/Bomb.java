@@ -7,7 +7,7 @@ import java.util.List;
 
 import dungeonmania.entities.Entity;
 import dungeonmania.entities.Player;
-import dungeonmania.entities.Switch;
+import dungeonmania.entities.StaticEntities.Switch;
 import dungeonmania.map.GameMap;
 
 public class Bomb extends BasicBomb {

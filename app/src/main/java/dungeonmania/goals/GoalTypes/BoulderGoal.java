@@ -1,7 +1,7 @@
 package dungeonmania.goals.GoalTypes;
 
 import dungeonmania.Game;
-import dungeonmania.entities.Switch;
+import dungeonmania.entities.StaticEntities.Switch;
 
 public class BoulderGoal extends BasicGoal {
     @Override

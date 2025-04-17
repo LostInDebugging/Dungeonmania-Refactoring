@@ -4,8 +4,8 @@ import java.util.List;
 
 import dungeonmania.Game;
 import dungeonmania.entities.Entity;
-import dungeonmania.entities.Exit;
 import dungeonmania.entities.Player;
+import dungeonmania.entities.StaticEntities.Exit;
 import dungeonmania.util.Position;
 
 public class ExitGoal extends BasicGoal {

@@ -1,8 +1,10 @@
-package dungeonmania.entities;
+package dungeonmania.entities.StaticEntities;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import dungeonmania.entities.Boulder;
+import dungeonmania.entities.Entity;
 import dungeonmania.entities.LogicExtension.Conductor;
 import dungeonmania.entities.LogicExtension.Wire;
 import dungeonmania.entities.collectables.Bomb;

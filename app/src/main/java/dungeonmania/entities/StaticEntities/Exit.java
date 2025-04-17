@@ -1,5 +1,6 @@
-package dungeonmania.entities;
+package dungeonmania.entities.StaticEntities;
 
+import dungeonmania.entities.Entity;
 import dungeonmania.map.GameMap;
 import dungeonmania.util.Position;
 

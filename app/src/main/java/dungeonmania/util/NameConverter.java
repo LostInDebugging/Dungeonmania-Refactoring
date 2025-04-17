@@ -3,9 +3,9 @@ package dungeonmania.util;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import dungeonmania.entities.Door;
 import dungeonmania.entities.Entity;
-import dungeonmania.entities.Portal;
+import dungeonmania.entities.StaticEntities.Door;
+import dungeonmania.entities.StaticEntities.Portal;
 
 /*
  * Converts the name of a class to snake case. This snake case string is the
