@@ -1,8 +1,6 @@
 package dungeonmania.goals.GoalTypes;
 
-import dungeonmania.Game;
-
-public abstract class CompoundGoal implements Goal {
+public abstract class CompoundGoal extends BasicGoal {
     private Goal goal1;
     private Goal goal2;
 
@@ -11,17 +9,11 @@ public abstract class CompoundGoal implements Goal {
         this.goal2 = goal2;
     }
 
-    @Override
-    public abstract boolean achieved(Game game);
-
-    @Override
-    public abstract String toString(Game game);
-
-    protected Goal getGoal1() {
+    public Goal getGoal1() {
         return goal1;
     }
 
-    protected Goal getGoal2() {
+    public Goal getGoal2() {
         return goal2;
     }
 }
