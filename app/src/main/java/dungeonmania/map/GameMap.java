@@ -2,9 +2,11 @@ package dungeonmania.map;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -15,6 +17,7 @@ import dungeonmania.entities.Player;
 import dungeonmania.entities.Portal;
 import dungeonmania.entities.PotionListener;
 import dungeonmania.entities.Switch;
+import dungeonmania.entities.LogicExtension.Wire;
 import dungeonmania.entities.collectables.Bomb;
 import dungeonmania.entities.enemies.Destroyable;
 import dungeonmania.entities.enemies.Enemy;
@@ -43,31 +46,38 @@ public class GameMap {
         initRegisterMovables();
         initRegisterSpawners();
         initRegisterBombsAndSwitches();
+        initRegisterSwitchesAndWires();
         initPotionListeners();
-        initSwitchWireConnections();
-    }
-
-    // Subscribe wires and switches to each other
-    private void initSwitchWireConnections() {
-        List<Switch> switches = getEntities(Switch.class);
-
-        for (Switch s : switches) {
-            s.findSubscribers(this, s.getPosition());
-        }
     }
 
     // Subscribe bombs and switches to each other
     private void initRegisterBombsAndSwitches() {
-        List<Bomb> bombs = getEntities(Bomb.class);
-        List<Switch> switchs = getEntities(Switch.class);
-        for (Bomb b : bombs) {
-            for (Switch s : switchs) {
+        getEntities(Bomb.class).forEach(b -> getEntities(Switch.class).forEach(
+            (s) -> {
                 if (Position.isAdjacent(b.getPosition(), s.getPosition())) {
                     b.subscribe(s);
                     s.subscribe(b);
                 }
+            }));
+    }
+
+    // Subscribe Switches and wires to each other
+    private void initRegisterSwitchesAndWires() {
+        getEntities(Switch.class).forEach(s -> {
+            dfsFindConnectedWires(s, new HashSet<>(), s.getPosition());
+        });
+    }
+
+    private void dfsFindConnectedWires(Switch sw, Set<Position> checkedWirePositions, Position currPos) {
+        checkedWirePositions.add(currPos);
+        currPos.getCardinallyAdjacentPositions().forEach(pos -> {
+            Wire wire = positionContainsEntity(pos, Wire.class);
+            if (!checkedWirePositions.contains(pos) && wire != null) {
+                sw.addWireSubscriber(wire);
+                wire.subscribeToSwitch(sw);
+                dfsFindConnectedWires(sw, checkedWirePositions, pos);
             }
-        }
+        });
     }
 
     // Pair up portals if there's any
@@ -87,8 +97,7 @@ public class GameMap {
 
     // Register each enemy to move on each tick.
     private void initRegisterMovables() {
-        List<Enemy> enemies = getEntities(Enemy.class);
-        enemies.forEach(e -> {
+        getEntities(Enemy.class).forEach(e -> {
             game.register(() -> e.move(game), Game.AI_MOVEMENT, e.getId());
         });
     }
@@ -96,8 +105,7 @@ public class GameMap {
     // Register each zombie toast spawner to attempt to spawn an enemy each tick
     // as well as initialise the spider spawning mechanic.
     private void initRegisterSpawners() {
-        List<ZombieToastSpawner> zts = getEntities(ZombieToastSpawner.class);
-        zts.forEach(e -> {
+        getEntities(ZombieToastSpawner.class).forEach(e -> {
             game.register(() -> e.spawn(game), Game.AI_MOVEMENT, e.getId());
         });
         game.register(() -> game.getEntityFactory().spawnSpider(game), Game.AI_MOVEMENT, "spawnSpiders");
@@ -115,8 +123,9 @@ public class GameMap {
 
     // Move an entity to a position
     public void moveTo(Entity entity, Position position) {
-        if (!canMoveTo(entity, position))
+        if (!canMoveTo(entity, position)) {
             return;
+        }
 
         triggerMovingAwayEvent(entity);
         removeNode(entity);
@@ -128,8 +137,9 @@ public class GameMap {
     // Move an entity in a given direction
     public void moveTo(Entity entity, Direction direction) {
         Position newPos = Position.translateBy(entity.getPosition(), direction);
-        if (!canMoveTo(entity, Position.translateBy(entity.getPosition(), direction)))
+        if (!canMoveTo(entity, Position.translateBy(entity.getPosition(), direction))) {
             return;
+        }
         triggerMovingAwayEvent(entity);
         removeNode(entity);
         entity.setPosition(newPos);
@@ -141,14 +151,19 @@ public class GameMap {
      * changed version - Calls onMovedAway only for switches, other entities do nothing when moved away from.
      */
     private void triggerMovingAwayEvent(Entity entity) {
+        // if a boulder is moving away from a switch then call onMovedAway for switch
         List<Runnable> callbacks = new ArrayList<>();
-        getEntities(entity.getPosition()).forEach(e -> {
-            if (e != entity && e instanceof Switch sw)
-                callbacks.add(() -> sw.onMovedAway(this, entity));
-        });
+        if (entity instanceof Boulder) {
+            getEntities(entity.getPosition()).forEach(e -> {
+                if (e instanceof Switch s) {
+                    callbacks.add(() -> s.onMovedAway(this, entity));
+                }
+            });
+        }
         callbacks.forEach(callback -> {
             callback.run();
         });
+
     }
 
     /*
@@ -175,8 +190,9 @@ public class GameMap {
 
     public Position dijkstraPathFind(Position src, Position dest, Entity entity) {
         // if inputs are invalid, don't move
-        if (!nodes.containsKey(src) || !nodes.containsKey(dest))
+        if (!nodes.containsKey(src) || !nodes.containsKey(dest)) {
             return src;
+        }
 
         Map<Position, Integer> dist = new HashMap<>();
         Map<Position, Position> prev = new HashMap<>();
@@ -242,8 +258,9 @@ public class GameMap {
     public void destroyEntitiesOnPosition(int x, int y) {
         List<Entity> entities = getEntities(new Position(x, y));
         entities = entities.stream().filter(Predicate.not(Player.class::isInstance)).toList();
-        for (Entity e : entities)
+        for (Entity e : entities) {
             destroyEntity(e);
+        }
     }
 
     // Destroy an entity from the game map
