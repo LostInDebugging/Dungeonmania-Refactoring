@@ -1,5 +1,6 @@
 package dungeonmania.entities.LogicExtension;
 
+import dungeonmania.entities.Entity;
 import dungeonmania.entities.StaticEntity;
 import dungeonmania.map.GameMap;
 import dungeonmania.util.Position;
@@ -20,5 +21,10 @@ public class LightBulb extends StaticEntity implements LogicalEntity {
 
     public boolean isOn() {
         return isOn;
+    }
+
+    @Override
+    public boolean canMoveOnto(GameMap map, Entity entity) {
+        return true;
     }
 }

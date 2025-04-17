@@ -3,6 +3,7 @@ package dungeonmania.entities;
 import dungeonmania.Game;
 import dungeonmania.entities.LogicExtension.LightBulb;
 import dungeonmania.entities.LogicExtension.LogicCondition;
+import dungeonmania.entities.LogicExtension.Wire;
 import dungeonmania.entities.LogicExtension.LogicConditions.AndCondition;
 import dungeonmania.entities.LogicExtension.LogicConditions.CoAndCondition;
 import dungeonmania.entities.LogicExtension.LogicConditions.OrCondition;
@@ -193,6 +194,8 @@ public class EntityFactory {
             return new Key(pos, jsonEntity.getInt("key"));
         case "light_bulb_off":
             return new LightBulb(pos, constructCondition(jsonEntity.getString("logic")));
+        case "wire":
+            return new Wire(pos);
         default:
             throw new IllegalArgumentException(
                     String.format("Failed to recognise '%s' entity in EntityFactory", jsonEntity.getString("type")));

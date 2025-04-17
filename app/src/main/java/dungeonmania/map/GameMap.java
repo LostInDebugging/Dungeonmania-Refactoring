@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import dungeonmania.Game;
+import dungeonmania.entities.Boulder;
 import dungeonmania.entities.Entity;
 import dungeonmania.entities.Player;
 import dungeonmania.entities.Portal;
@@ -158,7 +159,9 @@ public class GameMap {
     private void triggerOverlapEvent(Entity entity) {
         List<Runnable> overlapCallbacks = new ArrayList<>();
         getEntities(entity.getPosition()).forEach(e -> {
-            if (e != entity)
+            if (e instanceof Switch s && entity instanceof Boulder) {
+                overlapCallbacks.add(() -> s.onOverlap(this, entity, game.getTick()));
+            } else if (e != entity)
                 overlapCallbacks.add(() -> e.onOverlap(this, entity));
         });
         overlapCallbacks.forEach(callback -> {

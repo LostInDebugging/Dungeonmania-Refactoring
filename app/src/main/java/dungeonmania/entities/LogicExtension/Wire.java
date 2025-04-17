@@ -1,9 +1,12 @@
 package dungeonmania.entities.LogicExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import dungeonmania.entities.Entity;
 import dungeonmania.entities.StaticEntity;
 import dungeonmania.entities.Switch;
+import dungeonmania.map.GameMap;
 import dungeonmania.util.Position;
 
 public class Wire extends StaticEntity implements Conductor {
@@ -11,7 +14,7 @@ public class Wire extends StaticEntity implements Conductor {
         super(position);
     }
 
-    private List<Switch> subscribers;
+    private List<Switch> subscribers = new ArrayList<>();
 
     private boolean isConducting = false;
     private int tickStarted = -1;
@@ -43,4 +46,10 @@ public class Wire extends StaticEntity implements Conductor {
     public boolean isConducting() {
         return isConducting;
     }
+
+    @Override
+    public boolean canMoveOnto(GameMap map, Entity entity) {
+        return true;
+    }
 }
+

@@ -10,6 +10,7 @@ import dungeonmania.entities.Entity;
 import dungeonmania.entities.EntityFactory;
 import dungeonmania.entities.Interactable;
 import dungeonmania.entities.Player;
+import dungeonmania.entities.LogicExtension.LogicalEntity;
 import dungeonmania.entities.collectables.Bomb;
 import dungeonmania.entities.collectables.potions.Potion;
 import dungeonmania.entities.enemies.Enemy;
@@ -67,7 +68,16 @@ public class Game {
     public Game tick(Direction movementDirection) {
         registerOnce(() -> player.move(this.getMap(), movementDirection), PLAYER_MOVEMENT, "playerMoves");
         tick();
+        checkLogicalEntityStates();
         return this;
+    }
+
+    private void checkLogicalEntityStates() {
+        for (Entity e : map.getEntities()) {
+            if (e instanceof LogicalEntity le) {
+                le.switchState(map);
+            }
+        }
     }
 
     public Game tick(String itemUsedId) throws InvalidActionException {
@@ -157,7 +167,6 @@ public class Game {
     }
 
     public int tick() {
-        currTick++;
         isInTick = true;
         while (!tickActions.isEmpty()) {
             currentAction = tickActions.poll();

@@ -20,7 +20,7 @@ public class Switch extends StaticEntity implements Conductor {
     public void findSubscribers(GameMap map, Position currPos) {
         checkedWirePositions.add(currPos);
         for (Position pos : currPos.getCardinallyAdjacentPositions()) {
-            Wire wire = map.positionContainsEntity(currPos, Wire.class);
+            Wire wire = map.positionContainsEntity(pos, Wire.class);
             if (!checkedWirePositions.contains(pos) && wire != null) {
                 subscribers.add(wire);
                 wire.subscribeToSwitch(this);
@@ -76,11 +76,11 @@ public class Switch extends StaticEntity implements Conductor {
         }
     }
 
-    public void onMovedAway(GameMap map, Entity entity, int currTick) {
+    public void onMovedAway(GameMap map, Entity entity) {
         if (entity instanceof Boulder) {
             activated = false;
             tickStarted = -1;
-            subscribers.forEach(w -> w.notifyConducting(currTick));
+            subscribers.forEach(w -> w.notifyConducting(-1));
         }
     }
 
