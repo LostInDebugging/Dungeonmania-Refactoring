@@ -7,8 +7,7 @@ import dungeonmania.entities.inventory.Inventory;
 import dungeonmania.entities.collectables.SunStone;
 import dungeonmania.util.Position;
 
-public class Door extends StaticEntity {
-    private boolean open = false;
+public class Door extends BasicDoor {
     private int number;
 
     public Door(Position position, int number) {
@@ -18,7 +17,7 @@ public class Door extends StaticEntity {
 
     @Override
     public boolean canMoveOnto(GameMap map, Entity entity) {
-        if (open || entity instanceof Spider) {
+        if (isOpen() || entity instanceof Spider) {
             return true;
         }
         if (entity instanceof Player player) {
@@ -38,9 +37,9 @@ public class Door extends StaticEntity {
 
             Key key = inventory.getFirst(Key.class);
             inventory.remove(key);
-            open();
+            setOpen(true);
         } else if (hasSunStone(player)) {
-            open();
+            setOpen(true);
         }
     }
 
@@ -52,13 +51,5 @@ public class Door extends StaticEntity {
 
     private boolean hasSunStone(Player player) {
         return player.getInventory().getFirst(SunStone.class) != null;
-    }
-
-    public boolean isOpen() {
-        return open;
-    }
-
-    public void open() {
-        open = true;
     }
 }

@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import dungeonmania.Game;
+import dungeonmania.entities.Boulder;
 import dungeonmania.entities.Entity;
 import dungeonmania.entities.Player;
 import dungeonmania.entities.Portal;
@@ -35,7 +36,7 @@ public class GameMap {
      * 2. register all movables
      * 3. register all spawners
      * 4. register bombs and switches
-     * 5. more...
+     * 5. link all switches and wires
      */
     public void init() {
         initPairPortals();
@@ -43,6 +44,16 @@ public class GameMap {
         initRegisterSpawners();
         initRegisterBombsAndSwitches();
         initPotionListeners();
+        initSwitchWireConnections();
+    }
+
+    // Subscribe wires and switches to each other
+    private void initSwitchWireConnections() {
+        List<Switch> switches = getEntities(Switch.class);
+
+        for (Switch s : switches) {
+            s.findSubscribers(this, s.getPosition());
+        }
     }
 
     // Subscribe bombs and switches to each other
@@ -148,7 +159,9 @@ public class GameMap {
     private void triggerOverlapEvent(Entity entity) {
         List<Runnable> overlapCallbacks = new ArrayList<>();
         getEntities(entity.getPosition()).forEach(e -> {
-            if (e != entity)
+            if (e instanceof Switch s && entity instanceof Boulder) {
+                overlapCallbacks.add(() -> s.onOverlap(this, entity, game.getTick()));
+            } else if (e != entity)
                 overlapCallbacks.add(() -> e.onOverlap(this, entity));
         });
         overlapCallbacks.forEach(callback -> {
@@ -301,4 +314,12 @@ public class GameMap {
         this.game = game;
     }
 
+    // Given a position on the map and an entity type, returns the entity if it exists
+    // there and null otherwise.
+    public <T> T positionContainsEntity(Position pos, Class<T> entityType) {
+        GraphNode node = nodes.get(pos);
+        List<Entity> entities = (node != null) ? node.getEntities() : new ArrayList<>();
+        return entities.stream().filter(e -> entityType.isInstance(e)).map(e -> entityType.cast(e)).findFirst()
+                .orElse(null);
+    }
 }

@@ -2,7 +2,6 @@ package dungeonmania.task2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,6 @@ import dungeonmania.util.Direction;
 import dungeonmania.mvp.TestUtils;
 
 @Tag("Logic")
-@Disabled
 public class LogicEntitiesTest {
     public DungeonResponse tickMove(DungeonManiaController dmc, Direction dir, int tickCount) {
         DungeonResponse res = null;
@@ -21,6 +19,20 @@ public class LogicEntitiesTest {
             res = dmc.tick(dir);
         }
         return res;
+    }
+
+    @Test
+    @DisplayName("Test simple conduction and light bulb functionality")
+    public void testConductingLightBulb() {
+        DungeonManiaController dmc = new DungeonManiaController();
+        DungeonResponse res = dmc.newGame("testConductingLightBulb", "no_spider_bomb_radius_0");
+
+        assertEquals(2, TestUtils.countEntityOfType(res.getEntities(), "light_bulb_off"));
+
+        res = dmc.tick(Direction.DOWN);
+
+        assertEquals(0, TestUtils.countEntityOfType(res.getEntities(), "light_bulb_off"));
+        assertEquals(2, TestUtils.countEntityOfType(res.getEntities(), "light_bulb_on"));
     }
 
     @Test

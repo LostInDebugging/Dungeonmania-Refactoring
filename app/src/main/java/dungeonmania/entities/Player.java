@@ -10,7 +10,7 @@ import java.util.HashSet;
 import dungeonmania.battles.BattleStatistics;
 import dungeonmania.battles.Battleable;
 import dungeonmania.entities.buildables.BuildableType;
-import dungeonmania.entities.collectables.Bomb;
+import dungeonmania.entities.collectables.BasicBomb;
 import dungeonmania.entities.collectables.Treasure;
 import dungeonmania.entities.collectables.Useable;
 import dungeonmania.entities.collectables.potions.InvincibilityPotion;
@@ -129,7 +129,7 @@ public class Player extends Entity implements Battleable {
             inventory.remove(item);
     }
 
-    public void use(Bomb bomb, GameMap map) {
+    public void use(BasicBomb bomb, GameMap map) {
         inventory.remove(bomb);
         bomb.onPutDown(map, getPosition());
     }
