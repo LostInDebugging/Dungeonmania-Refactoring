@@ -260,6 +260,18 @@ Add all other changes you made in the same format here:
 
     - Fixed hardcoding in Inventory.java by moving construction logic into EntityFactory.java.
     - removed the remove boolean from the build method, and implemented an enum instead of boolean for keeping track of which buildable we're building.
+
+[Merge Request 8]()
+
+    -Changes made to Goals package to use Visitor Pattern
+
+    -GoalVisitor interface defines visit(...) for every goal type.
+    -BasicGoal delegates achieved() and toString() to the two visitors.
+    -Concrete goals reduced to constructors, getters, and accept(...) only.
+    -AchievedVisitor centralizes completion logic (exit, boulders, treasure, enemies, AND/OR).
+    -CodeVisitor centralizes goal‑string logic (":exit", dynamic progress, formatting).
+    -Overall everything is much neater.
+
 ## Task 2) Evolution of Requirements 👽
 
 ### a) Microevolution - Enemy Goal
@@ -343,84 +355,85 @@ Add all other changes you made in the same format here:
 
 **Design**
 
-- Split into 3 MRs:
-    1. Writing test cases
+    - Split into 3 MRs:
+        1. Writing test cases
+        2. Introduction of logical entities and the OR logic
+        3. AND, XOR and CO_AND logic
+
+    Initial Design considerations: 
+
+    1. Test cases - Already wrote basic test case scenarios in pair blog
     2. Introduction of logical entities and the OR logic
+        - Wires 
+            - Inherit from the staticEntity class and contains methods for subscribing to a switch
+            - subscribes to a particular switch if there is a valid conductive path to the switch
+            - this way, if a particular switch is turned off, we simply check for each subscribing conductor whether
+            it is subscribed to an on switch. If it is, then it stays on, and turns off otherwise.
+            - Similarly, when a particular switch is turned on, then each subscribing conductor should be turned on
+        - Logic door/lightbulb/logic bomb
+            - We simply check the logic condition and check cardinally adjacent directions for 
+            active current and turn on/off based on that
+            - switch door inherits from door and logical bombs inherit from bombs and implement the logical interface
+            - lightbulbs inherit from staticEntity and implement the logical interface
+        - The logical interface
+            - Contains a method that takes in a LogicCondition and gameMap as a parameter and returns
+            true if the condition is satisfied, and false otherwise
+        - The LogicCondition abstract class
+            - All the concrete condition classes inherit from LogicCondition and have a method
+            called isSatisfied which returns true if the logical condition is satisfied.
     3. AND, XOR and CO_AND logic
+        - Checking AND and XOR is simply a matter of checking adjacent tiles for active conductors
+        - However, for CO_AND we will need to somehow need a global tick counter.
+        - The current plan is to have a tickCount in the Game class, and then each conductor will 
+        have a tickActivated field which will store the number of the first tick that activated 
+        that conductor. If a wire is already on and a switch that would turn that wire on
+        is switched on, then the tickCount should not be updated. 
 
-Initial Design considerations: 
+    After completion:
+        - Added a conductor interface which wires and switches implement.
+        - the logical interface (in initial design) is actually implemented as a 
+        LogicalEntity interface which has a method switchState which takes in a map
+        and checks the state of the logical entity.
+        - The LogicCondition ended up being an interface which had a isSatisfied method
+        returning true if the logic condition was satisfied. Every Entity that implemented
+        LogicalEntity had a LogicCondition field. 
 
-1. Test cases - Already wrote basic test case scenarios in pair blog
-2. Introduction of logical entities and the OR logic
-    - Wires 
-        - Inherit from the staticEntity class and contains methods for subscribing to a switch
-        - subscribes to a particular switch if there is a valid conductive path to the switch
-        - this way, if a particular switch is turned off, we simply check for each subscribing conductor whether
-        it is subscribed to an on switch. If it is, then it stays on, and turns off otherwise.
-        - Similarly, when a particular switch is turned on, then each subscribing conductor should be turned on
-    - Logic door/lightbulb/logic bomb
-        - We simply check the logic condition and check cardinally adjacent directions for 
-        active current and turn on/off based on that
-        - switch door inherits from door and logical bombs inherit from bombs and implement the logical interface
-        - lightbulbs inherit from staticEntity and implement the logical interface
-    - The logical interface
-        - Contains a method that takes in a LogicCondition and gameMap as a parameter and returns
-        true if the condition is satisfied, and false otherwise
-    - The LogicCondition abstract class
-        - All the concrete condition classes inherit from LogicCondition and have a method
-        called isSatisfied which returns true if the logical condition is satisfied.
-3. AND, XOR and CO_AND logic
-    - Checking AND and XOR is simply a matter of checking adjacent tiles for active conductors
-    - However, for CO_AND we will need to somehow need a global tick counter.
-    - The current plan is to have a tickCount in the Game class, and then each conductor will 
-    have a tickActivated field which will store the number of the first tick that activated 
-    that conductor. If a wire is already on and a switch that would turn that wire on
-    is switched on, then the tickCount should not be updated. 
-
-After completion:
-    - Added a conductor interface which wires and switches implement.
-    - the logical interface (in initial design) is actually implemented as a 
-    LogicalEntity interface which has a method switchState which takes in a map
-    and checks the state of the logical entity.
-    - The LogicCondition ended up being an interface which had a isSatisfied method
-    returning true if the logic condition was satisfied. Every Entity that implemented
-    LogicalEntity had a LogicCondition field. 
 **Changes after review**
 
 [Design review/Changes made]
 
 **Test list**
 
-- Conditional Logic tests:
-    1. Check OR requirements met
-    2. Check OR requirements not met
-    3. Check AND requirements met
-    4. check AND requirements not met
-    5. check XOR requirements met
-    6. check XOR requirements not met
-    7. check CO_AND requirements met
-    8. check CO_AND requirements not met (All adjacent conductors have current but not in same tick)
-    9. check CO_AND requirements not met (Not all adjacent conductors have current)
-    10. for CO_AND, check that another conductor does not change the start tick of an already active conductor 
-    (and hence does not turn off the CO_AND entity)
+    - Conditional Logic tests:
+        1. Check OR requirements met
+        2. Check OR requirements not met
+        3. Check AND requirements met
+        4. check AND requirements not met
+        5. check XOR requirements met
+        6. check XOR requirements not met
+        7. check CO_AND requirements met
+        8. check CO_AND requirements not met (All adjacent conductors have current but not in same tick)
+        9. check CO_AND requirements not met (Not all adjacent conductors have current)
+        10. for CO_AND, check that another conductor does not change the start tick of an already active conductor 
+        (and hence does not turn off the CO_AND entity)
 
-- Logical Entity tests:
-    1. Check that light bulb activates next to activated switch
-    2. Check that logical bomb activates next to activated switch
-    3. Check that Switch door activates next to activated switch
-    4. Check that current does not propagate through inactive switches, i.e. 
-        s -> is -> e, where s, is and e are switch, inactive switch and logical entity respectively,
-        should not let e be activated.
-    5. Check that Logical entities activate next to activated wire
-    6. Check that wire propagates current when next to active switch
-    7. Check that if there are multiple switches powering a logic entity, then turning
-    one off does not deactivate the logic entity.
+    - Logical Entity tests:
+        1. Check that light bulb activates next to activated switch
+        2. Check that logical bomb activates next to activated switch
+        3. Check that Switch door activates next to activated switch
+        4. Check that current does not propagate through inactive switches, i.e. 
+            s -> is -> e, where s, is and e are switch, inactive switch and logical entity respectively,
+            should not let e be activated.
+        5. Check that Logical entities activate next to activated wire
+        6. Check that wire propagates current when next to active switch
+        7. Check that if there are multiple switches powering a logic entity, then turning
+        one off does not deactivate the logic entity.
 
-Some of the tests I have written target a specific point, but in doing so, they manage
-to target some other points too if they pass
-**Other notes**
+    Some of the tests I have written target a specific point, but in doing so, they manage
+    to target some other points too if they pass
+    **Other notes**
 
-I ended up doing only 2 MRs: 1 for the tests and 1 for the implementation
+    I ended up doing only 2 MRs: 1 for the tests and 1 for the implementation
 
 ### Choice 2 (Sunstone and More Buildables)
 

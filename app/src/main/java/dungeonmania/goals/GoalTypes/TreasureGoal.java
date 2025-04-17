@@ -1,21 +1,18 @@
 package dungeonmania.goals.GoalTypes;
 
-import dungeonmania.Game;
-
 public class TreasureGoal extends BasicGoal {
-    private int targetAmount = 1;
+    private int treasureTarget;
 
-    public TreasureGoal(int targetAmount) {
-        this.targetAmount = targetAmount;
+    public TreasureGoal(int treasureTarget) {
+        this.treasureTarget = treasureTarget;
+    }
+
+    public int getTreasureTarget() {
+        return treasureTarget;
     }
 
     @Override
-    public boolean achieved(Game game) {
-        return game.getCollectedTreasureCount() >= targetAmount;
-    }
-
-    @Override
-    public String toString(Game game) {
-        return achieved(game) ? "" : ":treasure";
+    public <R> R accept(GoalVisitor<R> visitor) {
+        return visitor.visit(this);
     }
 }
