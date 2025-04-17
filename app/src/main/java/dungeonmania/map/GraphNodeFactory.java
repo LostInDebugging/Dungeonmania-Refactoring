@@ -33,6 +33,9 @@ public class GraphNodeFactory {
                  "spider",
                  "door",
                  "key",
+                 "wire",
+                 "light_bulb_off",
+                 "switch_door",
                  "sun_stone"  -> new GraphNode(factory.createEntity(jsonEntity));
             default -> throw new IllegalArgumentException(
                     String.format("Failed to recognise '%s' entity in GraphNodeFactory", jsonEntity.getString("type")));

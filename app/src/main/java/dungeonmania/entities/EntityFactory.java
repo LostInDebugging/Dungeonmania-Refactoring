@@ -1,6 +1,13 @@
 package dungeonmania.entities;
 
 import dungeonmania.Game;
+import dungeonmania.entities.LogicExtension.LightBulb;
+import dungeonmania.entities.LogicExtension.LogicCondition;
+import dungeonmania.entities.LogicExtension.Wire;
+import dungeonmania.entities.LogicExtension.LogicConditions.AndCondition;
+import dungeonmania.entities.LogicExtension.LogicConditions.CoAndCondition;
+import dungeonmania.entities.LogicExtension.LogicConditions.OrCondition;
+import dungeonmania.entities.LogicExtension.LogicConditions.XorCondition;
 import dungeonmania.entities.buildables.Bow;
 import dungeonmania.entities.buildables.MidnightArmour;
 import dungeonmania.entities.buildables.Sceptre;
@@ -232,7 +239,11 @@ public class EntityFactory {
             return new Arrow(pos);
         case "bomb":
             int bombRadius = config.optInt("bomb_radius", Bomb.DEFAULT_RADIUS);
-            return new Bomb(pos, bombRadius);
+            if (jsonEntity.has("logic")) {
+                return new LogicalBomb(pos, bombRadius, constructCondition(jsonEntity.getString("logic")));
+            } else {
+                return new Bomb(pos, bombRadius);
+            }
         case "invisibility_potion":
             int invisibilityPotionDuration = config.optInt("invisibility_potion_duration",
                     InvisibilityPotion.DEFAULT_DURATION);
@@ -253,11 +264,32 @@ public class EntityFactory {
             return new Door(pos, jsonEntity.getInt("key"));
         case "key":
             return new Key(pos, jsonEntity.getInt("key"));
+        case "light_bulb_off":
+            return new LightBulb(pos, constructCondition(jsonEntity.getString("logic")));
+        case "wire":
+            return new Wire(pos);
+        case "switch_door":
+            return new SwitchDoor(pos, constructCondition(jsonEntity.getString("logic")));
         case "sun_stone":
             return new SunStone(pos);
         default:
             throw new IllegalArgumentException(
                     String.format("Failed to recognise '%s' entity in EntityFactory", jsonEntity.getString("type")));
+        }
+    }
+
+    private LogicCondition constructCondition(String logicKey) {
+        switch (logicKey) {
+        case "and":
+            return new AndCondition();
+        case "or":
+            return new OrCondition();
+        case "co_and":
+            return new CoAndCondition();
+        case "xor":
+            return new XorCondition();
+        default:
+            throw new IllegalArgumentException();
         }
     }
 }
