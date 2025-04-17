@@ -1,15 +1,15 @@
 package dungeonmania.goals.GoalTypes;
 
 public interface GoalVisitor<R> {
-    R visit(ExitGoal goal);
+    public R visit(ExitGoal goal);
 
-    R visit(EnemyGoal goal);
+    public R visit(EnemyGoal goal);
 
-    R visit(TreasureGoal goal);
+    public R visit(TreasureGoal goal);
 
-    R visit(BoulderGoal goal);
+    public R visit(BoulderGoal goal);
 
-    R visit(AndGoal goal);
+    public R visit(AndGoal goal);
 
-    R visit(OrGoal goal);
+    public R visit(OrGoal goal);
 }

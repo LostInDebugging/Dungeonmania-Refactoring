@@ -20,4 +20,6 @@
 
 ## Week 9
 
-- List the tasks you completed this week here
+- Tuesday: Completed task 2 D initial design and
+- Wednesday: Finished task2 D Sunstone and other buildables
+- Thursday: Refactored Goals package to use Visitor Pattern
