@@ -41,11 +41,11 @@ public class Player extends Entity implements Battleable {
 
     private PlayerState state;
 
-    public Player(Position position, double health, double attack) {
+    public Player(Position position, double health, double attack, GameMap map) {
         super(position);
         battleStatistics = new BattleStatistics(health, attack, 0, BattleStatistics.DEFAULT_DAMAGE_MAGNIFIER,
                 BattleStatistics.DEFAULT_PLAYER_DAMAGE_REDUCER);
-        inventory = new Inventory();
+        inventory = new Inventory(map);
         state = new BaseState(this);
     }
 
@@ -66,13 +66,17 @@ public class Player extends Entity implements Battleable {
     }
 
     public BuildableType parseBuildable(String entity) {
-        if (entity.equals("shield")) {
+        if (entity.equals("shield"))
             return BuildableType.SHIELD;
-        } else if (entity.equals("bow")) {
+        else if (entity.equals("bow"))
             return BuildableType.BOW;
-        } else {
+        else if (entity.equals("sceptre"))
+            return BuildableType.SCEPTRE;
+        else if (entity.equals("midnight_armour"))
+            return BuildableType.MIDNIGHT_ARMOUR;
+        else
             throw new IllegalArgumentException();
-        }
+
     }
 
     public boolean build(String entity, EntityFactory factory) {

@@ -44,7 +44,7 @@ public class GameBuilder {
         }
 
         Game game = new Game(dungeonName);
-        EntityFactory factory = new EntityFactory(config);
+        EntityFactory factory = new EntityFactory(config, game);
         game.setEntityFactory(factory);
         buildMap(game);
         buildGoals(game);

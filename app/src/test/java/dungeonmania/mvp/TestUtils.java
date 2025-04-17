@@ -90,6 +90,10 @@ public class TestUtils {
         return initialCount - currentCount;
     }
 
+    public static List<String> getBuildables(DungeonResponse response) {
+        return response.getBuildables();
+    }
+
     public static List<Position> getSpiderTrajectory(Position spawnPos) {
         List<Position> movementTrajectory = new ArrayList<>();
         int x = spawnPos.getX();

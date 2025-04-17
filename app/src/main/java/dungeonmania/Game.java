@@ -14,6 +14,7 @@ import dungeonmania.entities.LogicExtension.LogicalEntity;
 import dungeonmania.entities.collectables.BasicBomb;
 import dungeonmania.entities.collectables.potions.Potion;
 import dungeonmania.entities.enemies.Enemy;
+import dungeonmania.entities.enemies.Mercenary;
 import dungeonmania.entities.inventory.Inventory;
 import dungeonmania.entities.inventory.InventoryItem;
 import dungeonmania.exceptions.InvalidActionException;
@@ -178,6 +179,11 @@ public class Game {
         isInTick = false;
         tickActions = futureTickActions;
         futureTickActions = new PriorityQueue<>();
+        for (Enemy enemy : getEntitiesOfType(Enemy.class)) {
+            if (enemy instanceof Mercenary) {
+                ((Mercenary) enemy).onTick();
+            }
+        }
         tickCount++;
         return tickCount;
     }
