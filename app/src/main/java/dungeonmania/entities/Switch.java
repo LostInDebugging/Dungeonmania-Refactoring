@@ -13,20 +13,11 @@ public class Switch extends StaticEntity implements Conductor {
     private boolean activated;
     private List<Bomb> bombs = new ArrayList<>();
 
-    private List<Wire> subscribers = new ArrayList<>();
-    private List<Position> checkedWirePositions = new ArrayList<>();
+    private List<Wire> wires = new ArrayList<>();
     private int tickStarted = -1;
 
-    public void findSubscribers(GameMap map, Position currPos) {
-        checkedWirePositions.add(currPos);
-        for (Position pos : currPos.getCardinallyAdjacentPositions()) {
-            Wire wire = map.positionContainsEntity(pos, Wire.class);
-            if (!checkedWirePositions.contains(pos) && wire != null) {
-                subscribers.add(wire);
-                wire.subscribeToSwitch(this);
-                findSubscribers(map, wire.getPosition());
-            }
-        }
+    public void addWireSubscriber(Wire w) {
+        wires.add(w);
     }
 
     public Switch(Position position) {
@@ -65,7 +56,7 @@ public class Switch extends StaticEntity implements Conductor {
         if (entity instanceof Boulder) {
             activated = true;
             tickStarted = currTick;
-            subscribers.forEach(w -> w.notifyConducting(currTick));
+            wires.forEach(w -> w.notifyConducting(currTick));
             activateBombs(map);
         }
     }
@@ -80,7 +71,7 @@ public class Switch extends StaticEntity implements Conductor {
         if (entity instanceof Boulder) {
             activated = false;
             tickStarted = -1;
-            subscribers.forEach(w -> w.notifyConducting(-1));
+            wires.forEach(w -> w.notifyConducting(-1));
         }
     }
 

@@ -14,14 +14,14 @@ public class Wire extends StaticEntity implements Conductor {
         super(position);
     }
 
-    private List<Switch> subscribers = new ArrayList<>();
+    private List<Switch> switches = new ArrayList<>();
 
     private boolean isConducting = false;
     private int tickStarted = -1;
 
     public void notifyConducting(int currTick) {
         // if there is an active connected switch
-        if (subscribers.stream().anyMatch(s -> s.isActivated())) {
+        if (switches.stream().anyMatch(s -> s.isActivated())) {
             // if it is off, only then update the tick started
             if (!isConducting) {
                 isConducting = true;
@@ -39,7 +39,7 @@ public class Wire extends StaticEntity implements Conductor {
     }
 
     public void subscribeToSwitch(Switch s) {
-        subscribers.add(s);
+        switches.add(s);
     }
 
     @Override
