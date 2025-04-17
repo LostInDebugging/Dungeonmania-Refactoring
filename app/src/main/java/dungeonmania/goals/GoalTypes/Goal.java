@@ -3,7 +3,9 @@ package dungeonmania.goals.GoalTypes;
 import dungeonmania.Game;
 
 public interface Goal {
-    public boolean achieved(Game game);
+    boolean achieved(Game game);
 
-    public String toString(Game game);
+    String toString(Game game);
+
+    <R> R accept(GoalVisitor<R> visitor);
 }

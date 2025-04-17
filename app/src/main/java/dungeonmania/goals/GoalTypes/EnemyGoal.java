@@ -1,8 +1,5 @@
 package dungeonmania.goals.GoalTypes;
 
-import dungeonmania.Game;
-import dungeonmania.entities.enemies.ZombieToastSpawner;
-
 public class EnemyGoal extends BasicGoal {
     private int enemyTarget;
 
@@ -10,15 +7,12 @@ public class EnemyGoal extends BasicGoal {
         this.enemyTarget = enemyTarget;
     }
 
-    @Override
-    public boolean achieved(Game game) {
-        boolean defeatedEnough = game.getDefeatedEnemies() >= enemyTarget;
-        boolean spawnersCleared = game.getMap().getEntities(ZombieToastSpawner.class).isEmpty();
-        return defeatedEnough && spawnersCleared;
+    public int getEnemyTarget() {
+        return enemyTarget;
     }
 
     @Override
-    public String toString(Game game) {
-        return achieved(game) ? "" : ":enemies";
+    public <R> R accept(GoalVisitor<R> visitor) {
+        return visitor.visit(this);
     }
 }
