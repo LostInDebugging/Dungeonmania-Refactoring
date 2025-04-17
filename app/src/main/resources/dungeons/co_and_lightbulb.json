@@ -43,7 +43,7 @@
       {
         "x": 4,
         "y": 5,
-        "type": "light_bulb_off",
+        "type": "bomb",
         "logic": "co_and"
       },
       {

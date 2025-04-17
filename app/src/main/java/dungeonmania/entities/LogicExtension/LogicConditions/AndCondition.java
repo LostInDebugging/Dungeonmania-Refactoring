@@ -15,9 +15,12 @@ public class AndCondition implements LogicCondition {
 
         for (Position position : adjacents) {
             Conductor conductor = map.positionContainsEntity(position, Conductor.class);
-            if (conductor != null && !conductor.isConducting()) {
-                conductorCount++;
-                return false;
+            if (conductor != null) {
+                if (!conductor.isConducting()) {
+                    return false;
+                } else {
+                    conductorCount++;
+                }
             }
         }
 

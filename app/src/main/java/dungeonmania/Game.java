@@ -11,7 +11,7 @@ import dungeonmania.entities.EntityFactory;
 import dungeonmania.entities.Interactable;
 import dungeonmania.entities.Player;
 import dungeonmania.entities.LogicExtension.LogicalEntity;
-import dungeonmania.entities.collectables.Bomb;
+import dungeonmania.entities.collectables.BasicBomb;
 import dungeonmania.entities.collectables.potions.Potion;
 import dungeonmania.entities.enemies.Enemy;
 import dungeonmania.entities.inventory.Inventory;
@@ -84,11 +84,11 @@ public class Game {
         Entity item = player.getEntity(itemUsedId);
         if (item == null)
             throw new InvalidActionException(String.format("Item with id %s doesn't exist", itemUsedId));
-        if (!(item instanceof Bomb) && !(item instanceof Potion))
+        if (!(item instanceof BasicBomb) && !(item instanceof Potion))
             throw new IllegalArgumentException(String.format("%s cannot be used", item.getClass()));
 
         registerOnce(() -> {
-            if (item instanceof Bomb bomb)
+            if (item instanceof BasicBomb bomb)
                 player.use(bomb, map);
             if (item instanceof Potion potion)
                 player.use(potion, tickCount);

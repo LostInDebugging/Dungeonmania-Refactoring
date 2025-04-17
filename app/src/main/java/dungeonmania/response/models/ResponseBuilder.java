@@ -6,7 +6,9 @@ import dungeonmania.Game;
 import dungeonmania.battles.BattleRound;
 import dungeonmania.entities.Entity;
 import dungeonmania.entities.Interactable;
+import dungeonmania.entities.SwitchDoor;
 import dungeonmania.entities.LogicExtension.LightBulb;
+import dungeonmania.entities.collectables.LogicalBomb;
 import dungeonmania.util.NameConverter;
 import java.util.stream.Collectors;
 
@@ -35,6 +37,10 @@ public class ResponseBuilder {
         String s = NameConverter.toSnakeCase(entity);
         if (entity instanceof LightBulb l) {
             s += l.isOn() ? "_on" : "_off";
+        } else if (entity instanceof SwitchDoor swd) {
+            s += swd.isOpen() ? "_open" : "";
+        } else if (entity instanceof LogicalBomb) {
+            s = "bomb";
         }
         return s;
     }

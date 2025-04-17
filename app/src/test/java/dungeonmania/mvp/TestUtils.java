@@ -162,6 +162,10 @@ public class TestUtils {
             return entities.stream().filter(e -> e.getType().startsWith(type))
                     .filter(e -> !e.getType().startsWith("zombie_toast_spawner")).collect(Collectors.toList()).size();
         }
+        if (type.equals("switch_door")) {
+            return entities.stream().filter(e -> e.getType().startsWith(type))
+            .filter(e -> !e.getType().startsWith("switch_door_open")).collect(Collectors.toList()).size();
+        }
         return entities.stream().filter(e -> e.getType().startsWith(type)).collect(Collectors.toList()).size();
     }
 

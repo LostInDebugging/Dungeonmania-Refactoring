@@ -10,21 +10,11 @@ import dungeonmania.entities.Player;
 import dungeonmania.entities.Switch;
 import dungeonmania.map.GameMap;
 
-public class Bomb extends CollectableItem {
-    public enum State {
-        SPAWNED, PLACED
-    }
-
-    public static final int DEFAULT_RADIUS = 1;
-    private State state;
-    private int radius;
-
+public class Bomb extends BasicBomb {
     private List<Switch> subs = new ArrayList<>();
 
     public Bomb(Position position, int radius) {
-        super(position);
-        state = State.SPAWNED;
-        this.radius = radius;
+        super(position, radius);
     }
 
     public void subscribe(Switch s) {
@@ -33,42 +23,22 @@ public class Bomb extends CollectableItem {
 
     @Override
     public void onOverlap(GameMap map, Entity entity) {
-        if (state != State.SPAWNED)
+        if (getState() != State.SPAWNED)
             return;
         if (entity instanceof Player player) {
             if (!player.pickUp(this))
                 return;
-            subs.stream().forEach(s -> s.unsubscribe(this));
             map.destroyEntity(this);
         }
     }
 
-    public int getRadius() {
-        return radius;
-    }
-
+    @Override
     public void onPutDown(GameMap map, Position p) {
-        setPosition(p);
-        map.addEntity(this);
-        this.state = State.PLACED;
+        super.onPutDown(map, p);
         List<Position> adjPosList = getPosition().getCardinallyAdjacentPositions();
         adjPosList.stream().forEach(node -> {
             List<Entity> entities = map.getEntities(node).stream().filter(Switch.class::isInstance).toList();
             entities.stream().map(Switch.class::cast).forEach(s -> s.subscribe(this, map));
         });
-    }
-
-    public void activate(GameMap map) {
-        int x = getPosition().getX();
-        int y = getPosition().getY();
-        for (int i = x - getRadius(); i <= x + getRadius(); i++) {
-            for (int j = y - getRadius(); j <= y + getRadius(); j++) {
-                map.destroyEntitiesOnPosition(i, j);
-            }
-        }
-    }
-
-    public State getState() {
-        return state;
     }
 }

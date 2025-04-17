@@ -7,8 +7,7 @@ import dungeonmania.entities.enemies.Spider;
 import dungeonmania.entities.inventory.Inventory;
 import dungeonmania.util.Position;
 
-public class Door extends StaticEntity {
-    private boolean open = false;
+public class Door extends BasicDoor {
     private int number;
 
     public Door(Position position, int number) {
@@ -18,7 +17,7 @@ public class Door extends StaticEntity {
 
     @Override
     public boolean canMoveOnto(GameMap map, Entity entity) {
-        if (open || entity instanceof Spider) {
+        if (isOpen() || entity instanceof Spider) {
             return true;
         }
         return (entity instanceof Player player && hasKey(player));
@@ -34,23 +33,14 @@ public class Door extends StaticEntity {
 
         if (hasKey(player)) {
             inventory.remove(key);
-            open();
+            setOpen(true);
         }
     }
 
-    private boolean hasKey(Player player) {
+    protected boolean hasKey(Player player) {
         Inventory inventory = player.getInventory();
         Key key = inventory.getFirst(Key.class);
 
         return (key != null && key.getnumber() == number);
     }
-
-    public boolean isOpen() {
-        return open;
-    }
-
-    public void open() {
-        open = true;
-    }
-
 }

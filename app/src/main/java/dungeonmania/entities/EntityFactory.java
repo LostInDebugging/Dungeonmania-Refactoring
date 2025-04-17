@@ -171,7 +171,11 @@ public class EntityFactory {
             return new Arrow(pos);
         case "bomb":
             int bombRadius = config.optInt("bomb_radius", Bomb.DEFAULT_RADIUS);
-            return new Bomb(pos, bombRadius);
+            if (jsonEntity.has("logic")) {
+                return new LogicalBomb(pos, bombRadius, constructCondition(jsonEntity.getString("logic")));
+            } else {
+                return new Bomb(pos, bombRadius);
+            }
         case "invisibility_potion":
             int invisibilityPotionDuration = config.optInt("invisibility_potion_duration",
                     InvisibilityPotion.DEFAULT_DURATION);
@@ -196,6 +200,8 @@ public class EntityFactory {
             return new LightBulb(pos, constructCondition(jsonEntity.getString("logic")));
         case "wire":
             return new Wire(pos);
+        case "switch_door":
+            return new SwitchDoor(pos, constructCondition(jsonEntity.getString("logic")));
         default:
             throw new IllegalArgumentException(
                     String.format("Failed to recognise '%s' entity in EntityFactory", jsonEntity.getString("type")));
