@@ -377,7 +377,14 @@ Initial Design considerations:
     that conductor. If a wire is already on and a switch that would turn that wire on
     is switched on, then the tickCount should not be updated. 
 
-
+After completion:
+    - Added a conductor interface which wires and switches implement.
+    - the logical interface (in initial design) is actually implemented as a 
+    LogicalEntity interface which has a method switchState which takes in a map
+    and checks the state of the logical entity.
+    - The LogicCondition ended up being an interface which had a isSatisfied method
+    returning true if the logic condition was satisfied. Every Entity that implemented
+    LogicalEntity had a LogicCondition field. 
 **Changes after review**
 
 [Design review/Changes made]
@@ -413,7 +420,7 @@ Some of the tests I have written target a specific point, but in doing so, they 
 to target some other points too if they pass
 **Other notes**
 
-[Any other notes]
+I ended up doing only 2 MRs: 1 for the tests and 1 for the implementation
 
 ### Choice 2 (Insert choice)
 
