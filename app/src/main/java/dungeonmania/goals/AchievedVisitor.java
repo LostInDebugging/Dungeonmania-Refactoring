@@ -3,9 +3,9 @@ package dungeonmania.goals;
 import java.util.List;
 
 import dungeonmania.Game;
-import dungeonmania.entities.Exit;
+import dungeonmania.entities.StaticEntities.Exit;
 import dungeonmania.entities.Player;
-import dungeonmania.entities.Switch;
+import dungeonmania.entities.StaticEntities.Switch;
 import dungeonmania.entities.enemies.ZombieToastSpawner;
 import dungeonmania.util.Position;
 import dungeonmania.goals.GoalTypes.*;

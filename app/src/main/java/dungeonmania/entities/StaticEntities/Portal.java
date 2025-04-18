@@ -1,8 +1,11 @@
-package dungeonmania.entities;
+package dungeonmania.entities.StaticEntities;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import dungeonmania.entities.ColorCodedType;
+import dungeonmania.entities.Entity;
+import dungeonmania.entities.Player;
 import dungeonmania.entities.enemies.Mercenary;
 import dungeonmania.entities.enemies.ZombieToast;
 import dungeonmania.map.GameMap;
@@ -28,7 +31,7 @@ public class Portal extends StaticEntity {
 
     public boolean canTeleportTo(GameMap map, Entity entity) {
         List<Position> neighbours = getPosition().getCardinallyAdjacentPositions();
-        return neighbours.stream().allMatch(n -> map.canMoveTo(entity, n));
+        return neighbours.stream().anyMatch(n -> map.canMoveTo(entity, n));
     }
 
     @Override

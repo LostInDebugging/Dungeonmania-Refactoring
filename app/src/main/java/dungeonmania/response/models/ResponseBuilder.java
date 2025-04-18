@@ -6,9 +6,9 @@ import dungeonmania.Game;
 import dungeonmania.battles.BattleRound;
 import dungeonmania.entities.Entity;
 import dungeonmania.entities.Interactable;
-import dungeonmania.entities.SwitchDoor;
 import dungeonmania.entities.LogicExtension.LightBulb;
-import dungeonmania.entities.collectables.LogicalBomb;
+import dungeonmania.entities.LogicExtension.LogicalBomb;
+import dungeonmania.entities.LogicExtension.SwitchDoor;
 import dungeonmania.util.NameConverter;
 import java.util.stream.Collectors;
 

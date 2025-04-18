@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dungeonmania.entities.Entity;
-import dungeonmania.entities.StaticEntity;
-import dungeonmania.entities.Switch;
+import dungeonmania.entities.StaticEntities.StaticEntity;
+import dungeonmania.entities.StaticEntities.Switch;
 import dungeonmania.map.GameMap;
 import dungeonmania.util.Position;
 

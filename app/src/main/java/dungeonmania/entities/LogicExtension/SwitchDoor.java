@@ -1,7 +1,7 @@
-package dungeonmania.entities;
+package dungeonmania.entities.LogicExtension;
 
-import dungeonmania.entities.LogicExtension.LogicCondition;
-import dungeonmania.entities.LogicExtension.LogicalEntity;
+import dungeonmania.entities.Entity;
+import dungeonmania.entities.StaticEntities.BasicDoor;
 import dungeonmania.entities.enemies.Spider;
 import dungeonmania.map.GameMap;
 import dungeonmania.util.Position;
