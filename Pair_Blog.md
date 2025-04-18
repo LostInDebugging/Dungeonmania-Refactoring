@@ -364,6 +364,7 @@
 
 [MR1](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/16)
 [MR2](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/18)
+[MR3](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/23)
 
 **Assumptions**
 
@@ -423,7 +424,8 @@
 
 **Changes after review**
 
-[Design review/Changes made]
+- Small fix in the third merge request regarding tickStarted being affected only
+in different ticks.
 
 **Test list**
 
