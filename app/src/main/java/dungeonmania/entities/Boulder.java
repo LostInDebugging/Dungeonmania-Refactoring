@@ -15,15 +15,15 @@ public class Boulder extends StaticEntity {
     public boolean canMoveOnto(GameMap map, Entity entity) {
         if (entity instanceof Spider)
             return false;
-        if (entity instanceof Player && canPush(map, entity.getFacing()))
+        if (entity instanceof Player p && canPush(map, p.getFacing()))
             return true;
         return false;
     }
 
     @Override
     public void onOverlap(GameMap map, Entity entity) {
-        if (entity instanceof Player) {
-            map.moveTo(this, entity.getFacing());
+        if (entity instanceof Player p) {
+            map.moveTo(this, p.getFacing());
         }
     }
 

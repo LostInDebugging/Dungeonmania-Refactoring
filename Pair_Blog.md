@@ -281,6 +281,9 @@ Add all other changes you made in the same format here:
     - Made folders to organise files
     - minor bug fix (jumpt to Task 3)
     
+[Merge Request 10](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/22)
+    - Moved facing from Entity.java to player.java
+    
 ## Task 2) Evolution of Requirements 👽
 
 ### a) Microevolution - Enemy Goal
