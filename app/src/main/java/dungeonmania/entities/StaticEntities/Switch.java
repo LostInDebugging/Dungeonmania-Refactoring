@@ -1,15 +1,26 @@
-package dungeonmania.entities;
+package dungeonmania.entities.StaticEntities;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import dungeonmania.entities.Boulder;
+import dungeonmania.entities.Entity;
+import dungeonmania.entities.LogicExtension.Conductor;
+import dungeonmania.entities.LogicExtension.Wire;
 import dungeonmania.entities.collectables.Bomb;
 import dungeonmania.map.GameMap;
 import dungeonmania.util.Position;
 
-public class Switch extends Entity {
+public class Switch extends StaticEntity implements Conductor {
     private boolean activated;
     private List<Bomb> bombs = new ArrayList<>();
+
+    private List<Wire> wires = new ArrayList<>();
+    private int tickStarted = -1;
+
+    public void addWireSubscriber(Wire w) {
+        wires.add(w);
+    }
 
     public Switch(Position position) {
         super(position.asLayer(Entity.ITEM_LAYER));
@@ -43,22 +54,34 @@ public class Switch extends Entity {
         }
     }
 
-    public void activateBombs(GameMap map) {
-        for (Bomb b : bombs) {
-            int x = b.getPosition().getX();
-            int y = b.getPosition().getY();
-            for (int i = x - b.getRadius(); i <= x + b.getRadius(); i++) {
-                for (int j = y - b.getRadius(); j <= y + b.getRadius(); j++) {
-                    map.destroyEntitiesOnPosition(i, j);
-                }
-            }
+    public void onOverlap(GameMap map, Entity entity, int currTick) {
+        if (entity instanceof Boulder) {
+            activated = true;
+            tickStarted = currTick;
+            wires.forEach(w -> w.notifyConducting(currTick));
+            activateBombs(map);
         }
     }
 
-    @Override
+    public void activateBombs(GameMap map) {
+        for (Bomb b : bombs) {
+            b.activate(map);
+        }
+    }
+
     public void onMovedAway(GameMap map, Entity entity) {
         if (entity instanceof Boulder) {
             activated = false;
+            tickStarted = -1;
+            wires.forEach(w -> w.notifyConducting(-1));
+        }
+    }
+
+    public void onMovedAway(GameMap map, Entity entity, int currTick) {
+        if (entity instanceof Boulder) {
+            activated = false;
+            tickStarted = -1;
+            wires.forEach(w -> w.notifyConducting(currTick));
         }
     }
 
@@ -67,7 +90,12 @@ public class Switch extends Entity {
     }
 
     @Override
-    public void onDestroy(GameMap gameMap) {
-        return;
+    public boolean isConducting() {
+        return activated;
+    }
+
+    @Override
+    public int getTickStartedConducting() {
+        return tickStarted;
     }
 }

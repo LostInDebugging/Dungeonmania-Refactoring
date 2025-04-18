@@ -7,8 +7,8 @@ import org.json.JSONObject;
 import dungeonmania.entities.Entity;
 import dungeonmania.entities.EntityFactory;
 import dungeonmania.entities.Player;
-import dungeonmania.goals.Goal;
 import dungeonmania.goals.GoalFactory;
+import dungeonmania.goals.GoalTypes.Goal;
 import dungeonmania.map.GameMap;
 import dungeonmania.map.GraphNode;
 import dungeonmania.map.GraphNodeFactory;
@@ -44,7 +44,7 @@ public class GameBuilder {
         }
 
         Game game = new Game(dungeonName);
-        EntityFactory factory = new EntityFactory(config);
+        EntityFactory factory = new EntityFactory(config, game);
         game.setEntityFactory(factory);
         buildMap(game);
         buildGoals(game);

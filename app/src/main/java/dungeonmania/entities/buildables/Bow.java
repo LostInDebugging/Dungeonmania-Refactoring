@@ -2,9 +2,11 @@ package dungeonmania.entities.buildables;
 
 import dungeonmania.Game;
 import dungeonmania.battles.BattleStatistics;
+import dungeonmania.entities.collectables.Buffable;
 import dungeonmania.entities.collectables.Useable;
+import dungeonmania.entities.inventory.InventoryItem;
 
-public class Bow extends Buildable implements Useable {
+public class Bow extends InventoryItem implements Useable, Buffable {
     private int durability;
 
     public Bow(int durability) {
@@ -16,7 +18,7 @@ public class Bow extends Buildable implements Useable {
     public void use(Game game) {
         durability--;
         if (durability <= 0) {
-            game.getPlayer().remove(this);
+            game.removeInventoryItemFromPlayer(this);
         }
     }
 

@@ -1,10 +1,27 @@
 package dungeonmania.entities;
 
 import dungeonmania.Game;
+import dungeonmania.entities.LogicExtension.LightBulb;
+import dungeonmania.entities.LogicExtension.LogicCondition;
+import dungeonmania.entities.LogicExtension.LogicalBomb;
+import dungeonmania.entities.LogicExtension.SwitchDoor;
+import dungeonmania.entities.LogicExtension.Wire;
+import dungeonmania.entities.LogicExtension.LogicConditions.AndCondition;
+import dungeonmania.entities.LogicExtension.LogicConditions.CoAndCondition;
+import dungeonmania.entities.LogicExtension.LogicConditions.OrCondition;
+import dungeonmania.entities.LogicExtension.LogicConditions.XorCondition;
+import dungeonmania.entities.StaticEntities.Door;
+import dungeonmania.entities.StaticEntities.Exit;
+import dungeonmania.entities.StaticEntities.Portal;
+import dungeonmania.entities.StaticEntities.Switch;
+import dungeonmania.entities.StaticEntities.Wall;
 import dungeonmania.entities.buildables.Bow;
+import dungeonmania.entities.buildables.MidnightArmour;
+import dungeonmania.entities.buildables.Sceptre;
 import dungeonmania.entities.buildables.Shield;
 import dungeonmania.entities.collectables.*;
 import dungeonmania.entities.enemies.*;
+import dungeonmania.entities.inventory.InventoryItem;
 import dungeonmania.map.GameMap;
 import dungeonmania.entities.collectables.potions.InvincibilityPotion;
 import dungeonmania.entities.collectables.potions.InvisibilityPotion;
@@ -18,10 +35,12 @@ import org.json.JSONObject;
 
 public class EntityFactory {
     private JSONObject config;
+    private Game game;
     private Random ranGen = new Random();
 
-    public EntityFactory(JSONObject config) {
+    public EntityFactory(JSONObject config, Game game) {
         this.config = config;
+        this.game = game;
     }
 
     public Entity createEntity(JSONObject jsonEntity) {
@@ -84,7 +103,7 @@ public class EntityFactory {
     public Player buildPlayer(Position pos) {
         double playerHealth = config.optDouble("player_health", Player.DEFAULT_HEALTH);
         double playerAttack = config.optDouble("player_attack", Player.DEFAULT_ATTACK);
-        return new Player(pos, playerHealth, playerAttack);
+        return new Player(pos, playerHealth, playerAttack, game.getMap());
     }
 
     public ZombieToast buildZombieToast(Position pos) {
@@ -109,15 +128,94 @@ public class EntityFactory {
                 allyAttack, allyDefence);
     }
 
-    public Bow buildBow() {
+    public Bow buildBow(List<Wood> woods, List<Arrow> arrows, List<InventoryItem> items) {
+        if (woods.size() >= 1 && arrows.size() >= 3) {
+            items.removeAll(List.of(woods.get(0), arrows.get(0), arrows.get(1), arrows.get(2)));
+        } else {
+            return null;
+        }
         int bowDurability = config.optInt("bow_durability");
         return new Bow(bowDurability);
     }
 
-    public Shield buildShield() {
+    public Shield buildShield(List<Wood> woods, List<Treasure> treasures, List<Key> keys, List<InventoryItem> items) {
+        if (woods.size() >= 2 && (treasures.size() >= 1 || keys.size() >= 1)) {
+            items.removeAll(List.of(woods.get(0), woods.get(1)));
+            if (treasures.size() >= 1) {
+                items.remove(treasures.get(0));
+            } else {
+                items.remove(keys.get(0));
+            }
+        } else {
+            return null;
+        }
         int shieldDurability = config.optInt("shield_durability");
         double shieldDefence = config.optInt("shield_defence");
         return new Shield(shieldDurability, shieldDefence);
+    }
+
+    public Sceptre buildSceptre(List<Wood> woods, List<Arrow> arrows, List<Key> keys, List<Treasure> treasures,
+            List<SunStone> sunStones, List<InventoryItem> items, JSONObject config) {
+        boolean slot1Satisfied = false;
+        if (woods.size() >= 1) {
+            items.remove(woods.get(0));
+            slot1Satisfied = true;
+        } else if (arrows.size() >= 2) {
+            items.remove(arrows.get(0));
+            items.remove(arrows.get(1));
+            slot1Satisfied = true;
+        }
+        if (!slot1Satisfied) {
+            return null;
+        }
+
+        boolean slot2Satisfied = false;
+        boolean usedSunStoneForSlot2 = false;
+        if (keys.size() >= 1) {
+            items.remove(keys.get(0));
+            slot2Satisfied = true;
+        } else if (treasures.size() >= 1) {
+            items.remove(treasures.get(0));
+            slot2Satisfied = true;
+        } else if (sunStones.size() >= 2) {
+            items.remove(sunStones.get(0));
+            usedSunStoneForSlot2 = true;
+            slot2Satisfied = true;
+        }
+        if (!slot2Satisfied) {
+            return null;
+        }
+
+        if (sunStones.size() < 1) {
+            return null;
+        }
+        items.remove(sunStones.get(0));
+
+        int duration = config.optInt("mind_control_duration", 2);
+
+        return new Sceptre(null, duration);
+    }
+
+    public MidnightArmour buildMidnightArmour(List<Sword> swords, List<SunStone> sunStones, List<InventoryItem> items,
+            Game game, JSONObject config) {
+
+        if (!swords.isEmpty() && !sunStones.isEmpty()
+                && game.getMap().getEntities(dungeonmania.entities.enemies.ZombieToast.class).isEmpty()) {
+            items.remove(swords.get(0));
+            items.remove(sunStones.get(0));
+            double bonusAttack = config.optDouble("midnight_armour_attack", 2.0);
+            double bonusDefence = config.optDouble("midnight_armour_defence", 2.0);
+            return new MidnightArmour(null, bonusAttack, bonusDefence);
+        }
+        return null;
+    }
+
+    public JSONObject getConfig() {
+        return config;
+    }
+
+    public Game getGame() {
+        return game;
     }
 
     private Entity constructEntity(JSONObject jsonEntity, JSONObject config) {
@@ -148,7 +246,11 @@ public class EntityFactory {
             return new Arrow(pos);
         case "bomb":
             int bombRadius = config.optInt("bomb_radius", Bomb.DEFAULT_RADIUS);
-            return new Bomb(pos, bombRadius);
+            if (jsonEntity.has("logic")) {
+                return new LogicalBomb(pos, bombRadius, constructCondition(jsonEntity.getString("logic")));
+            } else {
+                return new Bomb(pos, bombRadius);
+            }
         case "invisibility_potion":
             int invisibilityPotionDuration = config.optInt("invisibility_potion_duration",
                     InvisibilityPotion.DEFAULT_DURATION);
@@ -169,9 +271,32 @@ public class EntityFactory {
             return new Door(pos, jsonEntity.getInt("key"));
         case "key":
             return new Key(pos, jsonEntity.getInt("key"));
+        case "light_bulb_off":
+            return new LightBulb(pos, constructCondition(jsonEntity.getString("logic")));
+        case "wire":
+            return new Wire(pos);
+        case "switch_door":
+            return new SwitchDoor(pos, constructCondition(jsonEntity.getString("logic")));
+        case "sun_stone":
+            return new SunStone(pos);
         default:
             throw new IllegalArgumentException(
                     String.format("Failed to recognise '%s' entity in EntityFactory", jsonEntity.getString("type")));
+        }
+    }
+
+    private LogicCondition constructCondition(String logicKey) {
+        switch (logicKey) {
+        case "and":
+            return new AndCondition();
+        case "or":
+            return new OrCondition();
+        case "co_and":
+            return new CoAndCondition();
+        case "xor":
+            return new XorCondition();
+        default:
+            throw new IllegalArgumentException();
         }
     }
 }

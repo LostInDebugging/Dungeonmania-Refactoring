@@ -1,14 +1,17 @@
-package dungeonmania.entities;
+package dungeonmania.entities.StaticEntities;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import dungeonmania.entities.ColorCodedType;
+import dungeonmania.entities.Entity;
+import dungeonmania.entities.Player;
 import dungeonmania.entities.enemies.Mercenary;
 import dungeonmania.entities.enemies.ZombieToast;
 import dungeonmania.map.GameMap;
 import dungeonmania.util.Position;
 
-public class Portal extends Entity {
+public class Portal extends StaticEntity {
     private ColorCodedType color;
     private Portal pair;
 
@@ -28,7 +31,7 @@ public class Portal extends Entity {
 
     public boolean canTeleportTo(GameMap map, Entity entity) {
         List<Position> neighbours = getPosition().getCardinallyAdjacentPositions();
-        return neighbours.stream().allMatch(n -> map.canMoveTo(entity, n));
+        return neighbours.stream().anyMatch(n -> map.canMoveTo(entity, n));
     }
 
     @Override
@@ -40,12 +43,8 @@ public class Portal extends Entity {
     }
 
     private void doTeleport(GameMap map, Entity entity) {
-        pair.getPosition()
-                .getCardinallyAdjacentPositions()
-                .stream()
-                .filter(dest -> map.canMoveTo(entity, dest))
-                .findAny()
-                .ifPresent(destination -> map.moveTo(entity, destination));
+        pair.getPosition().getCardinallyAdjacentPositions().stream().filter(dest -> map.canMoveTo(entity, dest))
+                .findAny().ifPresent(destination -> map.moveTo(entity, destination));
     }
 
     public String getColor() {
@@ -53,13 +52,11 @@ public class Portal extends Entity {
     }
 
     public List<Position> getDestPositions(GameMap map, Entity entity) {
-        return pair == null
-                ? null
-                : pair.getPosition().getAdjacentPositions()
-                    .stream()
-                    .filter(p -> map.canMoveTo(entity, p))
-                    .collect(Collectors.toList());
+        return pair == null ? null
+                : pair.getPosition().getAdjacentPositions().stream().filter(p -> map.canMoveTo(entity, p))
+                        .collect(Collectors.toList());
     }
+
     public void bind(Portal portal) {
         if (this.pair == portal)
             return;
@@ -72,13 +69,4 @@ public class Portal extends Entity {
         }
     }
 
-    @Override
-    public void onMovedAway(GameMap map, Entity entity) {
-        return;
-    }
-
-    @Override
-    public void onDestroy(GameMap gameMap) {
-        return;
-    }
 }

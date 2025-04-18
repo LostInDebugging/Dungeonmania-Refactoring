@@ -2,9 +2,11 @@ package dungeonmania.entities.buildables;
 
 import dungeonmania.Game;
 import dungeonmania.battles.BattleStatistics;
+import dungeonmania.entities.collectables.Buffable;
 import dungeonmania.entities.collectables.Useable;
+import dungeonmania.entities.inventory.InventoryItem;
 
-public class Shield extends Buildable implements Useable {
+public class Shield extends InventoryItem implements Useable, Buffable {
     private int durability;
     private double defence;
 
@@ -18,7 +20,7 @@ public class Shield extends Buildable implements Useable {
     public void use(Game game) {
         durability--;
         if (durability <= 0) {
-            game.getPlayer().remove(this);
+            game.removeInventoryItemFromPlayer(this);
         }
     }
 
@@ -31,5 +33,4 @@ public class Shield extends Buildable implements Useable {
     public int getDurability() {
         return durability;
     }
-
 }

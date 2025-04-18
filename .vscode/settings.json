@@ -10,5 +10,9 @@
   "editor.detectIndentation": false,
   "editor.glyphMargin": true,
   "workbench.editor.showIcons": true,
-  "coverage-gutters.coverageFileNames": ["jacocoTestReport.xml"]
+"coverage-gutters.coverageFileNames": [
+    "jacocoTestReport.xml"
+],
+"java.compile.nullAnalysis.mode": "automatic",
+"java.debug.settings.onBuildFailureProceed": true
 }

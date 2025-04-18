@@ -1,10 +1,11 @@
-package dungeonmania.entities;
+package dungeonmania.entities.StaticEntities;
 
 import dungeonmania.map.GameMap;
+import dungeonmania.entities.Entity;
 import dungeonmania.entities.enemies.Spider;
 import dungeonmania.util.Position;
 
-public class Wall extends Entity {
+public class Wall extends StaticEntity {
     public Wall(Position position) {
         super(position.asLayer(Entity.CHARACTER_LAYER));
     }
@@ -12,20 +13,5 @@ public class Wall extends Entity {
     @Override
     public boolean canMoveOnto(GameMap map, Entity entity) {
         return entity instanceof Spider;
-    }
-
-    @Override
-    public void onOverlap(GameMap map, Entity entity) {
-        return;
-    }
-
-    @Override
-    public void onMovedAway(GameMap map, Entity entity) {
-        return;
-    }
-
-    @Override
-    public void onDestroy(GameMap gameMap) {
-        return;
     }
 }

@@ -1,5 +1,6 @@
 package dungeonmania;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.UUID;
@@ -9,12 +10,17 @@ import dungeonmania.entities.Entity;
 import dungeonmania.entities.EntityFactory;
 import dungeonmania.entities.Interactable;
 import dungeonmania.entities.Player;
-import dungeonmania.entities.collectables.Bomb;
+import dungeonmania.entities.LogicExtension.LogicalEntity;
+import dungeonmania.entities.collectables.BasicBomb;
 import dungeonmania.entities.collectables.potions.Potion;
 import dungeonmania.entities.enemies.Enemy;
+import dungeonmania.entities.enemies.Mercenary;
+import dungeonmania.entities.inventory.Inventory;
+import dungeonmania.entities.inventory.InventoryItem;
 import dungeonmania.exceptions.InvalidActionException;
-import dungeonmania.goals.Goal;
+import dungeonmania.goals.GoalTypes.Goal;
 import dungeonmania.map.GameMap;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 
 public class Game {
@@ -29,7 +35,7 @@ public class Game {
     public static final int PLAYER_MOVEMENT = 0;
     public static final int POTION_BRIBE_UPDATE = 1;
     public static final int AI_MOVEMENT = 2;
-
+    private int defeatedEnemies = 0;
     private ComparableCallback currentAction = null;
 
     private int tickCount = 0;
@@ -44,6 +50,14 @@ public class Game {
         this.battleFacade = new BattleFacade();
     }
 
+    public int getDefeatedEnemies() {
+        return defeatedEnemies;
+    }
+
+    public void removeInventoryItemFromPlayer(InventoryItem item) {
+        player.remove(item);
+    }
+
     public void init() {
         this.id = UUID.randomUUID().toString();
         map.init();
@@ -55,18 +69,27 @@ public class Game {
     public Game tick(Direction movementDirection) {
         registerOnce(() -> player.move(this.getMap(), movementDirection), PLAYER_MOVEMENT, "playerMoves");
         tick();
+        checkLogicalEntityStates();
         return this;
+    }
+
+    private void checkLogicalEntityStates() {
+        for (Entity e : map.getEntities()) {
+            if (e instanceof LogicalEntity le) {
+                le.switchState(map);
+            }
+        }
     }
 
     public Game tick(String itemUsedId) throws InvalidActionException {
         Entity item = player.getEntity(itemUsedId);
         if (item == null)
             throw new InvalidActionException(String.format("Item with id %s doesn't exist", itemUsedId));
-        if (!(item instanceof Bomb) && !(item instanceof Potion))
+        if (!(item instanceof BasicBomb) && !(item instanceof Potion))
             throw new IllegalArgumentException(String.format("%s cannot be used", item.getClass()));
 
         registerOnce(() -> {
-            if (item instanceof Bomb bomb)
+            if (item instanceof BasicBomb bomb)
                 player.use(bomb, map);
             if (item instanceof Potion potion)
                 player.use(potion, tickCount);
@@ -82,6 +105,7 @@ public class Game {
         }
         if (enemy.getBattleStatistics().getHealth() <= 0) {
             map.destroyEntity(enemy);
+            defeatedEnemies++;
         }
     }
 
@@ -155,6 +179,11 @@ public class Game {
         isInTick = false;
         tickActions = futureTickActions;
         futureTickActions = new PriorityQueue<>();
+        for (Enemy enemy : getEntitiesOfType(Enemy.class)) {
+            if (enemy instanceof Mercenary) {
+                ((Mercenary) enemy).onTick();
+            }
+        }
         tickCount++;
         return tickCount;
     }
@@ -205,5 +234,27 @@ public class Game {
 
     public BattleFacade getBattleFacade() {
         return battleFacade;
+    }
+
+    public List<Entity> getAllEntities() {
+        return this.map.getEntities();
+    }
+
+    public Inventory getPlayerInventory() {
+        return this.player.getInventory();
+    }
+
+    public List<String> getAvailableBuildables() {
+        return (this.player != null) ? this.player.getBuildables() : new ArrayList<>();
+    }
+
+    public List<ItemResponse> getPlayerInventoryResponses() {
+        if (player == null)
+            return null;
+        return player.getInventoryResponses();
+    }
+
+    public <T extends Entity> List<T> getEntitiesOfType(Class<T> type) {
+        return map.getEntities(type);
     }
 }

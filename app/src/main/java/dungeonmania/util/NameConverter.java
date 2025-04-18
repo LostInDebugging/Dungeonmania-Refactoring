@@ -3,9 +3,12 @@ package dungeonmania.util;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import dungeonmania.entities.Door;
 import dungeonmania.entities.Entity;
-import dungeonmania.entities.Portal;
+import dungeonmania.entities.LogicExtension.LightBulb;
+import dungeonmania.entities.LogicExtension.LogicalBomb;
+import dungeonmania.entities.LogicExtension.SwitchDoor;
+import dungeonmania.entities.StaticEntities.Door;
+import dungeonmania.entities.StaticEntities.Portal;
 
 /*
  * Converts the name of a class to snake case. This snake case string is the
@@ -25,6 +28,13 @@ public class NameConverter {
         if (entity instanceof Door door) {
             String open = door.isOpen() ? "_open" : "";
             return nameBasic + open;
+        }
+        if (entity instanceof LightBulb l) {
+            return nameBasic + (l.isOn() ? "_on" : "_off");
+        } else if (entity instanceof SwitchDoor swd) {
+            return nameBasic + (swd.isOpen() ? "_open" : "");
+        } else if (entity instanceof LogicalBomb) {
+            return "bomb";
         }
         return nameBasic;
     }

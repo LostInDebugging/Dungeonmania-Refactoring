@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.json.JSONObject;
 
 public class TestUtils {
@@ -78,6 +77,21 @@ public class TestUtils {
         int xDiff = pos1.getX() - pos2.getX();
         int yDiff = pos1.getY() - pos2.getY();
         return Math.sqrt((xDiff * xDiff) + (yDiff * yDiff));
+    }
+
+    public static int getDefeatedEnemyCount(DungeonResponse initialResponse, DungeonResponse currentResponse,
+            String enemyType) {
+        int initialCount = (int) initialResponse.getEntities().stream()
+                .filter(entity -> entity.getType().equals(enemyType)).count();
+
+        int currentCount = (int) currentResponse.getEntities().stream()
+                .filter(entity -> entity.getType().equals(enemyType)).count();
+
+        return initialCount - currentCount;
+    }
+
+    public static List<String> getBuildables(DungeonResponse response) {
+        return response.getBuildables();
     }
 
     public static List<Position> getSpiderTrajectory(Position spawnPos) {
@@ -151,6 +165,10 @@ public class TestUtils {
         if (type.equals("zombie_toast")) {
             return entities.stream().filter(e -> e.getType().startsWith(type))
                     .filter(e -> !e.getType().startsWith("zombie_toast_spawner")).collect(Collectors.toList()).size();
+        }
+        if (type.equals("switch_door")) {
+            return entities.stream().filter(e -> e.getType().startsWith(type))
+            .filter(e -> !e.getType().startsWith("switch_door_open")).collect(Collectors.toList()).size();
         }
         return entities.stream().filter(e -> e.getType().startsWith(type)).collect(Collectors.toList()).size();
     }

@@ -1,21 +1,27 @@
 package dungeonmania.entities.enemies;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import dungeonmania.Game;
 import dungeonmania.battles.BattleStatistics;
 import dungeonmania.battles.Battleable;
 import dungeonmania.entities.Entity;
 import dungeonmania.entities.Player;
 import dungeonmania.entities.PotionListener;
+import dungeonmania.entities.enemies.MovementStrategy.MovementStrategy;
 import dungeonmania.map.GameMap;
 import dungeonmania.util.Position;
 
-public abstract class Enemy extends Entity implements Battleable {
+public abstract class Enemy extends Entity implements Battleable, Destroyable {
     private BattleStatistics battleStatistics;
+    private MovementStrategy movementStrategy;
 
-    public Enemy(Position position, double health, double attack) {
+    public Enemy(Position position, double health, double attack, MovementStrategy movementStrategy) {
         super(position.asLayer(Entity.CHARACTER_LAYER));
         battleStatistics = new BattleStatistics(health, attack, 0, BattleStatistics.DEFAULT_DAMAGE_MAGNIFIER,
                 BattleStatistics.DEFAULT_ENEMY_DAMAGE_REDUCER);
+        this.movementStrategy = movementStrategy;
     }
 
     @Override
@@ -35,7 +41,6 @@ public abstract class Enemy extends Entity implements Battleable {
         }
     }
 
-    @Override
     public void onDestroy(GameMap map) {
         Game g = map.getGame();
         g.unsubscribe(getId());
@@ -43,10 +48,20 @@ public abstract class Enemy extends Entity implements Battleable {
             map.getPlayer().removePotionListener(potionListener);
     }
 
-    @Override
-    public void onMovedAway(GameMap map, Entity entity) {
-        return;
+    public void move(Game game) {
+        movementStrategy.move(game.getMap(), this, game.getPlayer());
     }
 
-    public abstract void move(Game game);
+    public double getHealth() {
+        return getBattleStatistics().getHealth();
+    }
+
+    protected void setMovementStrategy(MovementStrategy strategy) {
+        this.movementStrategy = strategy;
+    }
+
+    public List<Position> getValidMovementPositions(GameMap map) {
+        return this.getPosition().getCardinallyAdjacentPositions().stream().filter(p -> map.canMoveTo(this, p))
+                .collect(Collectors.toList());
+    }
 }

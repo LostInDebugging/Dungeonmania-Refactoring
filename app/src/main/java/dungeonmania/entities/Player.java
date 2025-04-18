@@ -4,11 +4,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.HashSet;
 
 import dungeonmania.battles.BattleStatistics;
 import dungeonmania.battles.Battleable;
-import dungeonmania.entities.collectables.Bomb;
+import dungeonmania.entities.buildables.BuildableType;
+import dungeonmania.entities.collectables.BasicBomb;
+import dungeonmania.entities.collectables.Key;
 import dungeonmania.entities.collectables.Treasure;
 import dungeonmania.entities.collectables.Useable;
 import dungeonmania.entities.collectables.potions.InvincibilityPotion;
@@ -20,7 +23,9 @@ import dungeonmania.entities.inventory.InventoryItem;
 import dungeonmania.entities.playerState.BaseState;
 import dungeonmania.entities.playerState.PlayerState;
 import dungeonmania.map.GameMap;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
+import dungeonmania.util.NameConverter;
 import dungeonmania.util.Position;
 
 public class Player extends Entity implements Battleable {
@@ -37,12 +42,19 @@ public class Player extends Entity implements Battleable {
 
     private PlayerState state;
 
-    public Player(Position position, double health, double attack) {
+    private Direction facing;
+    private Position previousPosition;
+    private Position previousDistinctPosition;
+
+    public Player(Position position, double health, double attack, GameMap map) {
         super(position);
         battleStatistics = new BattleStatistics(health, attack, 0, BattleStatistics.DEFAULT_DAMAGE_MAGNIFIER,
                 BattleStatistics.DEFAULT_PLAYER_DAMAGE_REDUCER);
-        inventory = new Inventory();
+        inventory = new Inventory(map);
         state = new BaseState(this);
+        this.facing = null;
+        this.previousPosition = position;
+        this.previousDistinctPosition = null;
     }
 
     public int getCollectedTreasureCount() {
@@ -61,8 +73,22 @@ public class Player extends Entity implements Battleable {
         return inventory.getBuildables();
     }
 
+    public BuildableType parseBuildable(String entity) {
+        if (entity.equals("shield"))
+            return BuildableType.SHIELD;
+        else if (entity.equals("bow"))
+            return BuildableType.BOW;
+        else if (entity.equals("sceptre"))
+            return BuildableType.SCEPTRE;
+        else if (entity.equals("midnight_armour"))
+            return BuildableType.MIDNIGHT_ARMOUR;
+        else
+            throw new IllegalArgumentException();
+
+    }
+
     public boolean build(String entity, EntityFactory factory) {
-        InventoryItem item = inventory.checkBuildCriteria(this, true, entity.equals("shield"), factory);
+        InventoryItem item = inventory.checkBuildCriteria(this, parseBuildable(entity), factory);
         if (item == null)
             return false;
         return inventory.add(item);
@@ -77,7 +103,7 @@ public class Player extends Entity implements Battleable {
     public void onOverlap(GameMap map, Entity entity) {
         if (entity instanceof Enemy enemy) {
             if (enemy instanceof Mercenary mercenary && mercenary.isAllied())
-                    return;
+                return;
             map.getGame().battle(this, enemy);
         }
     }
@@ -94,6 +120,9 @@ public class Player extends Entity implements Battleable {
     public boolean pickUp(Entity item) {
         if (item instanceof Treasure)
             collectedTreasureCount++;
+        if (item instanceof Key && inventory.getFirst(Key.class) != null) {
+            return false;
+        }
         return inventory.add((InventoryItem) item);
     }
 
@@ -111,7 +140,7 @@ public class Player extends Entity implements Battleable {
             inventory.remove(item);
     }
 
-    public void use(Bomb bomb, GameMap map) {
+    public void use(BasicBomb bomb, GameMap map) {
         inventory.remove(bomb);
         bomb.onPutDown(map, getPosition());
     }
@@ -173,16 +202,6 @@ public class Player extends Entity implements Battleable {
         return origin;
     }
 
-    @Override
-    public void onMovedAway(GameMap map, Entity entity) {
-        return;
-    }
-
-    @Override
-    public void onDestroy(GameMap gameMap) {
-        return;
-    }
-
     public void registerPotionListener(PotionListener e) {
         potionListeners.add(e);
 
@@ -192,5 +211,43 @@ public class Player extends Entity implements Battleable {
 
     public void removePotionListener(PotionListener e) {
         potionListeners.remove(e);
+    }
+
+    public List<ItemResponse> getInventoryResponses() {
+        return inventory.getEntities().stream()
+                .map(entity -> new ItemResponse(entity.getId(), NameConverter.toSnakeCase(entity)))
+                .collect(Collectors.toList());
+    }
+
+    public double getHealth() {
+        return getBattleStatistics().getHealth();
+    }
+
+    public <T extends InventoryItem> List<T> getInventoryItems(Class<T> itemType) {
+        return getInventory().getEntities(itemType);
+    }
+
+    public void setFacing(Direction facing) {
+        this.facing = facing;
+    }
+
+    public Direction getFacing() {
+        return this.facing;
+    }
+
+    public Position getPreviousPosition() {
+        return previousPosition;
+    }
+
+    public Position getPreviousDistinctPosition() {
+        return previousDistinctPosition;
+    }
+
+    public void setPosition(Position position) {
+        previousPosition = getPosition();
+        super.setPosition(position);
+        if (!previousPosition.equals(getPosition())) {
+            previousDistinctPosition = previousPosition;
+        }
     }
 }

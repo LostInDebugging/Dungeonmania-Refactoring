@@ -79,10 +79,10 @@ public class DoorsKeysTest {
         assertEquals(1, TestUtils.getInventory(res, "key").size());
         assertEquals(1, TestUtils.getEntities(res, "key").size());
 
-        // pick up key_2
+        // cannot pick up key_2
         res = dmc.tick(Direction.RIGHT);
-        assertEquals(2, TestUtils.getInventory(res, "key").size());
-        assertEquals(0, TestUtils.getEntities(res, "key").size());
+        assertEquals(1, TestUtils.getInventory(res, "key").size());
+        assertEquals(1, TestUtils.getEntities(res, "key").size());
     }
 
     @Test

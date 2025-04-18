@@ -5,4 +5,5 @@ import dungeonmania.Game;
 public interface Useable {
     public void use(Game game);
 
+    public int getDurability();
 }
