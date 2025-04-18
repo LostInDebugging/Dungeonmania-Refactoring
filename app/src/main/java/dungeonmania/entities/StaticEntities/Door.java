@@ -1,6 +1,8 @@
-package dungeonmania.entities;
+package dungeonmania.entities.StaticEntities;
 
 import dungeonmania.map.GameMap;
+import dungeonmania.entities.Entity;
+import dungeonmania.entities.Player;
 import dungeonmania.entities.collectables.Key;
 import dungeonmania.entities.enemies.Spider;
 import dungeonmania.entities.inventory.Inventory;

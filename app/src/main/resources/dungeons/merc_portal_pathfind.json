@@ -1,0 +1,65 @@
+{
+    "entities": [
+      {
+        "x": 6,
+        "y": 3,
+        "type": "wall"
+      },
+      {
+        "x": 0,
+        "y": 4,
+        "type": "mercenary"
+      },
+      {
+        "colour": "BLUE",
+        "x": 3,
+        "y": 4,
+        "type": "portal"
+      },
+      {
+        "x": 5,
+        "y": 4,
+        "type": "wall"
+      },
+      {
+        "colour": "BLUE",
+        "x": 6,
+        "y": 4,
+        "type": "portal"
+      },
+      {
+        "x": 7,
+        "y": 4,
+        "type": "switch_door",
+        "logic": "or"
+      },
+      {
+        "x": 6,
+        "y": 5,
+        "type": "wall"
+      },
+      {
+        "x": 7,
+        "y": 5,
+        "type": "switch"
+      },
+      {
+        "x": 8,
+        "y": 5,
+        "type": "boulder"
+      },
+      {
+        "x": 9,
+        "y": 5,
+        "type": "player"
+      },
+      {
+        "x": 9,
+        "y": 9,
+        "type": "exit"
+      }
+    ],
+    "goal-condition": {
+      "goal": "exit"
+    }
+  }

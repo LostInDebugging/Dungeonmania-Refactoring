@@ -1,9 +1,9 @@
 package dungeonmania.entities.inventory;
 
 import dungeonmania.entities.Entity;
+import dungeonmania.entities.StaticEntities.StaticEntity;
 import dungeonmania.map.GameMap;
 import dungeonmania.util.Position;
-import dungeonmania.entities.StaticEntity;
 
 /**
  * An item in the inventory

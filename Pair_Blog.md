@@ -277,6 +277,10 @@ Add all other changes you made in the same format here:
     -CodeVisitor centralizes goal‑string logic (":exit", dynamic progress, formatting).
     -Overall everything is much neater.
 
+[Merge Request 9](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/21)
+    - Made folders to organise files
+    - minor bug fix (jumpt to Task 3)
+    
 ## Task 2) Evolution of Requirements 👽
 
 ### a) Microevolution - Enemy Goal
@@ -564,8 +568,9 @@ Below is a summary of the test cases written to verify the buildable functionali
 - Bug in GameMap where onMovedAway for switch was called by every entity.
 - Fixed during a refactoring change
 
-[Merge Request 2](/put/links/here)
+[Merge Request 2](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/21)
 
-[Briefly explain what you did]
+- Bug in Portal.java
+- allMatch to anyMatch since the player should be able to move onto any one of the movable tiles
 
 Add all other changes you made in the same format here:

@@ -1,9 +1,7 @@
-package dungeonmania.entities.collectables;
+package dungeonmania.entities.LogicExtension;
 
 import dungeonmania.util.Position;
-
-import dungeonmania.entities.LogicExtension.LogicCondition;
-import dungeonmania.entities.LogicExtension.LogicalEntity;
+import dungeonmania.entities.collectables.BasicBomb;
 import dungeonmania.map.GameMap;
 
 public class LogicalBomb extends BasicBomb implements LogicalEntity {
