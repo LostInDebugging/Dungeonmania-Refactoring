@@ -4,7 +4,7 @@ import dungeonmania.entities.Player;
 
 public class InvincibleState extends PlayerState {
     public InvincibleState(Player player) {
-        super(player, true, false);
+        super(player);
     }
 
     @Override

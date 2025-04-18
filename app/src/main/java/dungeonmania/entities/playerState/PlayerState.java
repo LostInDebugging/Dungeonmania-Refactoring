@@ -4,21 +4,17 @@ import dungeonmania.entities.Player;
 
 public abstract class PlayerState {
     private Player player;
-    private boolean isInvincible = false;
-    private boolean isInvisible = false;
 
-    PlayerState(Player player, boolean isInvincible, boolean isInvisible) {
+    PlayerState(Player player) {
         this.player = player;
-        this.isInvincible = isInvincible;
-        this.isInvisible = isInvisible;
     }
 
     public boolean isInvincible() {
-        return isInvincible;
+        return this instanceof InvincibleState;
     };
 
     public boolean isInvisible() {
-        return isInvisible;
+        return this instanceof InvisibleState;
     };
 
     public Player getPlayer() {

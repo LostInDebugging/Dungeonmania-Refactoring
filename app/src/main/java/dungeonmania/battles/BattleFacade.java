@@ -33,13 +33,12 @@ public class BattleFacade {
         Potion effectivePotion = player.getEffectivePotion();
         if (effectivePotion != null) {
             playerBuff = player.applyBuff(playerBuff);
-        } else {
-            for (InventoryItem item : player.getInventoryItems(InventoryItem.class)) {
-                if (item instanceof Buffable) {
-                    playerBuff = ((Buffable) item).applyBuff(playerBuff);
-                    battleItems.add(item);
-                    ((Useable) item).use(game);
-                }
+        }
+        for (InventoryItem item : player.getInventoryItems(InventoryItem.class)) {
+            if (item instanceof Buffable b && item instanceof Useable u) {
+                playerBuff = b.applyBuff(playerBuff);
+                battleItems.add(item);
+                u.use(game);
             }
         }
 
