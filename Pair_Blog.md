@@ -586,4 +586,7 @@ Below is a summary of the test cases written to verify the buildable functionali
 - Bug in Portal.java
 - allMatch to anyMatch since the player should be able to move onto any one of the movable tiles
 
-Add all other changes you made in the same format here:
+[Merge Request 3](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/22)
+
+- Fixed bug where player could pick up two keys at the same time
+- Fixed bug where durability of item used does not go down if player is invicible

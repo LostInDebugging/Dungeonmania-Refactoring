@@ -11,6 +11,7 @@ import dungeonmania.battles.BattleStatistics;
 import dungeonmania.battles.Battleable;
 import dungeonmania.entities.buildables.BuildableType;
 import dungeonmania.entities.collectables.BasicBomb;
+import dungeonmania.entities.collectables.Key;
 import dungeonmania.entities.collectables.Treasure;
 import dungeonmania.entities.collectables.Useable;
 import dungeonmania.entities.collectables.potions.InvincibilityPotion;
@@ -119,6 +120,9 @@ public class Player extends Entity implements Battleable {
     public boolean pickUp(Entity item) {
         if (item instanceof Treasure)
             collectedTreasureCount++;
+        if (item instanceof Key && inventory.getFirst(Key.class) != null) {
+            return false;
+        }
         return inventory.add((InventoryItem) item);
     }
 

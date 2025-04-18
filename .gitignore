@@ -58,3 +58,6 @@ gradle-app.setting
 bin
 build
 .idea
+
+# REMOVE THIS IF YOU ADD A CONFIG/DUNGEON FILE FOR TESTING
+*.json
