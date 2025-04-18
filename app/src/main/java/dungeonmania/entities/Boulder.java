@@ -1,12 +1,11 @@
 package dungeonmania.entities;
 
-import dungeonmania.entities.StaticEntities.StaticEntity;
 import dungeonmania.entities.enemies.Spider;
 import dungeonmania.map.GameMap;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
-public class Boulder extends StaticEntity {
+public class Boulder extends Entity {
     public Boulder(Position position) {
         super(position.asLayer(Entity.CHARACTER_LAYER));
     }

@@ -12,14 +12,10 @@ public abstract class Entity {
     public static final int CHARACTER_LAYER = 3;
 
     private Position position;
-    private Position previousPosition;
-    private Position previousDistinctPosition;
     private String entityId;
 
     public Entity(Position position) {
         this.position = position;
-        this.previousPosition = position;
-        this.previousDistinctPosition = null;
         this.entityId = UUID.randomUUID().toString();
     }
 
@@ -33,23 +29,11 @@ public abstract class Entity {
         return position;
     }
 
-    public Position getPreviousPosition() {
-        return previousPosition;
-    }
-
-    public Position getPreviousDistinctPosition() {
-        return previousDistinctPosition;
-    }
-
     public String getId() {
         return entityId;
     }
 
     public void setPosition(Position position) {
-        previousPosition = this.position;
         this.position = position;
-        if (!previousPosition.equals(this.position)) {
-            previousDistinctPosition = previousPosition;
-        }
     }
 }

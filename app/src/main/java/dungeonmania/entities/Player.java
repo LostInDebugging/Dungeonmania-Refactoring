@@ -42,6 +42,8 @@ public class Player extends Entity implements Battleable {
     private PlayerState state;
 
     private Direction facing;
+    private Position previousPosition;
+    private Position previousDistinctPosition;
 
     public Player(Position position, double health, double attack, GameMap map) {
         super(position);
@@ -50,6 +52,8 @@ public class Player extends Entity implements Battleable {
         inventory = new Inventory(map);
         state = new BaseState(this);
         this.facing = null;
+        this.previousPosition = position;
+        this.previousDistinctPosition = null;
     }
 
     public int getCollectedTreasureCount() {
@@ -225,5 +229,21 @@ public class Player extends Entity implements Battleable {
 
     public Direction getFacing() {
         return this.facing;
+    }
+
+    public Position getPreviousPosition() {
+        return previousPosition;
+    }
+
+    public Position getPreviousDistinctPosition() {
+        return previousDistinctPosition;
+    }
+
+    public void setPosition(Position position) {
+        previousPosition = getPosition();
+        super.setPosition(position);
+        if (!previousPosition.equals(getPosition())) {
+            previousDistinctPosition = previousPosition;
+        }
     }
 }
