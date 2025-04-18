@@ -11,6 +11,7 @@ import dungeonmania.battles.BattleStatistics;
 import dungeonmania.battles.Battleable;
 import dungeonmania.entities.buildables.BuildableType;
 import dungeonmania.entities.collectables.BasicBomb;
+import dungeonmania.entities.collectables.Key;
 import dungeonmania.entities.collectables.Treasure;
 import dungeonmania.entities.collectables.Useable;
 import dungeonmania.entities.collectables.potions.InvincibilityPotion;
@@ -41,12 +42,19 @@ public class Player extends Entity implements Battleable {
 
     private PlayerState state;
 
+    private Direction facing;
+    private Position previousPosition;
+    private Position previousDistinctPosition;
+
     public Player(Position position, double health, double attack, GameMap map) {
         super(position);
         battleStatistics = new BattleStatistics(health, attack, 0, BattleStatistics.DEFAULT_DAMAGE_MAGNIFIER,
                 BattleStatistics.DEFAULT_PLAYER_DAMAGE_REDUCER);
         inventory = new Inventory(map);
         state = new BaseState(this);
+        this.facing = null;
+        this.previousPosition = position;
+        this.previousDistinctPosition = null;
     }
 
     public int getCollectedTreasureCount() {
@@ -112,6 +120,9 @@ public class Player extends Entity implements Battleable {
     public boolean pickUp(Entity item) {
         if (item instanceof Treasure)
             collectedTreasureCount++;
+        if (item instanceof Key && inventory.getFirst(Key.class) != null) {
+            return false;
+        }
         return inventory.add((InventoryItem) item);
     }
 
@@ -214,5 +225,29 @@ public class Player extends Entity implements Battleable {
 
     public <T extends InventoryItem> List<T> getInventoryItems(Class<T> itemType) {
         return getInventory().getEntities(itemType);
+    }
+
+    public void setFacing(Direction facing) {
+        this.facing = facing;
+    }
+
+    public Direction getFacing() {
+        return this.facing;
+    }
+
+    public Position getPreviousPosition() {
+        return previousPosition;
+    }
+
+    public Position getPreviousDistinctPosition() {
+        return previousDistinctPosition;
+    }
+
+    public void setPosition(Position position) {
+        previousPosition = getPosition();
+        super.setPosition(position);
+        if (!previousPosition.equals(getPosition())) {
+            previousDistinctPosition = previousPosition;
+        }
     }
 }

@@ -77,6 +77,14 @@ public class Switch extends StaticEntity implements Conductor {
         }
     }
 
+    public void onMovedAway(GameMap map, Entity entity, int currTick) {
+        if (entity instanceof Boulder) {
+            activated = false;
+            tickStarted = -1;
+            wires.forEach(w -> w.notifyConducting(currTick));
+        }
+    }
+
     public boolean isActivated() {
         return activated;
     }

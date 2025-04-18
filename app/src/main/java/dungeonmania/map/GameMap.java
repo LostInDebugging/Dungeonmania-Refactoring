@@ -52,13 +52,12 @@ public class GameMap {
 
     // Subscribe bombs and switches to each other
     private void initRegisterBombsAndSwitches() {
-        getEntities(Bomb.class).forEach(b -> getEntities(Switch.class).forEach(
-            (s) -> {
-                if (Position.isAdjacent(b.getPosition(), s.getPosition())) {
-                    b.subscribe(s);
-                    s.subscribe(b);
-                }
-            }));
+        getEntities(Bomb.class).forEach(b -> getEntities(Switch.class).forEach((s) -> {
+            if (Position.isAdjacent(b.getPosition(), s.getPosition())) {
+                b.subscribe(s);
+                s.subscribe(b);
+            }
+        }));
     }
 
     // Subscribe Switches and wires to each other
@@ -156,7 +155,7 @@ public class GameMap {
         if (entity instanceof Boulder) {
             getEntities(entity.getPosition()).forEach(e -> {
                 if (e instanceof Switch s) {
-                    callbacks.add(() -> s.onMovedAway(this, entity));
+                    callbacks.add(() -> s.onMovedAway(this, entity, game.getTick()));
                 }
             });
         }
