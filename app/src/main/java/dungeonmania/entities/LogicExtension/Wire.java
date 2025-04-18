@@ -22,15 +22,15 @@ public class Wire extends StaticEntity implements Conductor {
     public void notifyConducting(int currTick) {
         // if there is an active connected switch
         if (switches.stream().anyMatch(s -> s.isActivated())) {
-            // if it is off, only then update the tick started
-            if (!isConducting) {
+            // if it is off and the currTick is a differentTick, only then update the tick started
+            if (!isConducting && tickStarted != currTick) {
                 isConducting = true;
                 tickStarted = currTick;
             }
         } else {
             // turn it off
             isConducting = false;
-            tickStarted = -1;
+            tickStarted = currTick;
         }
     }
 
@@ -52,4 +52,3 @@ public class Wire extends StaticEntity implements Conductor {
         return true;
     }
 }
-
