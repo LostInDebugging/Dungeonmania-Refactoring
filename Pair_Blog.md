@@ -158,6 +158,11 @@
 
     The pattern used improves the code quality and maintainability.
 
+    Note: The booleans were unnecessary in PlayerState.java and were removed in a later
+    merge request.
+
+[booleans removed here](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/22)
+
 ### c) Inheritance Design
 
 [Links to your merge requests](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/6)
@@ -240,8 +245,6 @@
     Improved Encapsulation of BattleFacade by introducing helper methods instead of directly accessing player or enemy internals.
     Minor LoD improvement is Enemies same as above - Introducing helpers
 
-Add all other changes you made in the same format here:
-
 [Merge Request 4](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/11)
 
     - Removed Buildable.java: it contained only the onOverlap method which didn't make sense since built items go straight to inventory.
@@ -262,7 +265,8 @@ Add all other changes you made in the same format here:
     - removed the remove boolean from the build method, and implemented an enum instead of boolean for keeping track of which buildable we're building.
 
 [Merge Request 7](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/19)
-    Changes to GameMap.java:
+
+    - Changes to GameMap.java:
         - Changing to Query over Temp where possible (and using streams)
         - Moved switch-wire connection establishing to GameMap.java
 
@@ -278,8 +282,17 @@ Add all other changes you made in the same format here:
     -Overall everything is much neater.
 
 [Merge Request 9](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/21)
+
     - Made folders to organise files
     - minor bug fix (jumpt to Task 3)
+    
+[Merge Request 10](https://nw-syd-gitlab.cseunsw.tech/COMP2511/25T1/groups/T09A_MALTESE/assignment-ii/-/merge_requests/22)
+
+    - Moved facing from Entity.java to player.java
+    - Moved PreviousPosition and PreviousDistinctPosition fields and relevant methods into Player.java from Entity.java
+    - removed unnecessary booleans from PlayerState
+    - Responsebuilder had a wrapper function which I didn't need to implement at all (I discovered the nameConverter util function)
+    and modified it directly.
     
 ## Task 2) Evolution of Requirements 👽
 

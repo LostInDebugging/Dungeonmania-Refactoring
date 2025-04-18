@@ -1,12 +1,11 @@
 package dungeonmania.entities;
 
-import dungeonmania.entities.StaticEntities.StaticEntity;
 import dungeonmania.entities.enemies.Spider;
 import dungeonmania.map.GameMap;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
-public class Boulder extends StaticEntity {
+public class Boulder extends Entity {
     public Boulder(Position position) {
         super(position.asLayer(Entity.CHARACTER_LAYER));
     }
@@ -15,15 +14,15 @@ public class Boulder extends StaticEntity {
     public boolean canMoveOnto(GameMap map, Entity entity) {
         if (entity instanceof Spider)
             return false;
-        if (entity instanceof Player && canPush(map, entity.getFacing()))
+        if (entity instanceof Player p && canPush(map, p.getFacing()))
             return true;
         return false;
     }
 
     @Override
     public void onOverlap(GameMap map, Entity entity) {
-        if (entity instanceof Player) {
-            map.moveTo(this, entity.getFacing());
+        if (entity instanceof Player p) {
+            map.moveTo(this, p.getFacing());
         }
     }
 
